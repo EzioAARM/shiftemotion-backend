@@ -1,37 +1,149 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  backend
-  
-  Sample SAM Template for backend
+  Backend para ShiftEmotion basado en AWS Lambda
 
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 5
 
 Resources:
-  HelloWorldFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #Usar node
+  JwtValidationFunction:
+    Type: AWS::Serverless::Function
     Properties:
-      CodeUri: hello-world/
-      Handler: hello-world
+      CodeUri: jwtValidation/
+      Handler: main
       Runtime: go1.x
-      Tracing: Active # https://docs.aws.amazon.com/lambda/latest/dg/lambda-x-ray.html
+      Tracing: Active
+
+  LoginFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: login/
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
       Events:
         CatchAll:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
-            Path: /hello
+            Path: /login
             Method: GET
-      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
-        Variables:
-          PARAM1: VALUE
+
+  RegistroFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: registro/
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /registrar
+            Method: POST
+
+  GenerarTokenFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: generarToken/
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /reset-password
+            Method: GET
+
+  ResetPasswordFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: resetPassword/
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /resetPassword
+            Method: POST
+
+  RecomendacionInicialFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: recomendacionInicial/
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /recomendaciones/home
+            Method: GET
+
+  HistorialFotosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: historialFotos/
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /recomendaciones/historial
+            Method: GET
+
+  RecomendacionFotoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: recomendacionFoto/
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /recomendaciones/historial/recomendacion
+            Method: GET
+
+  ObtenerPerfilFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: obtenerPerfil/
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /perfil
+            Method: GET
+
+  ActualizarPerfilFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: actualizarPerfil/
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /perfil
+            Method: PUT
 
 Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   HelloWorldAPI:
     Description: "API Gateway endpoint URL for Prod environment for First Function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"

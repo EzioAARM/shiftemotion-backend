@@ -8,13 +8,27 @@ Globals:
     Timeout: 5
 
 Resources:
-  #Usar node
+  #Definición de la API
+  ShiftEmotionBackendAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Auth:
+        DefaultAuthorizer: jwtAuthorizer
+        Authorizers:
+          jwtAuthorizer:
+            FunctionPayloadType: TOKEN
+            FunctionArn: !GetAtt JwtValidationFunction.Arn
+            Identity:
+              Headers:
+                - tokenHeader
+
   JwtValidationFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: jwtValidation/
-      Handler: main
-      Runtime: go1.x
+      Handler: index.handler
+      Runtime: nodejs12.x
       Tracing: Active
 
   LoginFunction:
@@ -28,8 +42,10 @@ Resources:
         CatchAll:
           Type: Api
           Properties:
+            RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /login
             Method: GET
+            Authorizer: NONE
 
   RegistroFunction:
     Type: AWS::Serverless::Function
@@ -42,8 +58,10 @@ Resources:
         CatchAll:
           Type: Api
           Properties:
+            RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /registrar
             Method: POST
+            Authorizer: NONE
 
   GenerarTokenFunction:
     Type: AWS::Serverless::Function
@@ -56,8 +74,10 @@ Resources:
         CatchAll:
           Type: Api
           Properties:
+            RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /reset-password
             Method: GET
+            Authorizer: NONE
 
   ResetPasswordFunction:
     Type: AWS::Serverless::Function
@@ -70,8 +90,10 @@ Resources:
         CatchAll:
           Type: Api
           Properties:
-            Path: /resetPassword
+            RestApiId: !Ref ShiftEmotionBackendAPI
+            Path: /reset-password
             Method: POST
+            Authorizer: NONE
 
   RecomendacionInicialFunction:
     Type: AWS::Serverless::Function
@@ -84,6 +106,7 @@ Resources:
         CatchAll:
           Type: Api
           Properties:
+            RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/home
             Method: GET
 
@@ -98,6 +121,7 @@ Resources:
         CatchAll:
           Type: Api
           Properties:
+            RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial
             Method: GET
 
@@ -112,6 +136,7 @@ Resources:
         CatchAll:
           Type: Api
           Properties:
+            RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial/recomendacion
             Method: GET
 
@@ -126,6 +151,7 @@ Resources:
         CatchAll:
           Type: Api
           Properties:
+            RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /perfil
             Method: GET
 
@@ -140,6 +166,7 @@ Resources:
         CatchAll:
           Type: Api
           Properties:
+            RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /perfil
             Method: PUT
 

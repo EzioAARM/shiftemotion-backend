@@ -39,13 +39,14 @@ Resources:
       Runtime: go1.x
       Tracing: Active
       Events:
-        CatchAll:
+        GetRoot:
           Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /login
             Method: GET
-            Authorizer: NONE
+            Auth:
+              Authorizer: NONE
 
   RegistroFunction:
     Type: AWS::Serverless::Function
@@ -55,13 +56,14 @@ Resources:
       Runtime: go1.x
       Tracing: Active
       Events:
-        CatchAll:
+        GetRoot:
           Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /registrar
             Method: POST
-            Authorizer: NONE
+            Auth:
+              Authorizer: NONE
 
   GenerarTokenFunction:
     Type: AWS::Serverless::Function
@@ -71,13 +73,14 @@ Resources:
       Runtime: go1.x
       Tracing: Active
       Events:
-        CatchAll:
+        GetRoot:
           Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /reset-password
             Method: GET
-            Authorizer: NONE
+            Auth:
+              Authorizer: NONE
 
   ResetPasswordFunction:
     Type: AWS::Serverless::Function
@@ -87,13 +90,14 @@ Resources:
       Runtime: go1.x
       Tracing: Active
       Events:
-        CatchAll:
+        GetRoot:
           Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /reset-password
             Method: POST
-            Authorizer: NONE
+            Auth:
+              Authorizer: NONE
 
   RecomendacionInicialFunction:
     Type: AWS::Serverless::Function
@@ -103,7 +107,7 @@ Resources:
       Runtime: go1.x
       Tracing: Active
       Events:
-        CatchAll:
+        GetRoot:
           Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
@@ -118,7 +122,7 @@ Resources:
       Runtime: go1.x
       Tracing: Active
       Events:
-        CatchAll:
+        GetRoot:
           Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
@@ -133,7 +137,7 @@ Resources:
       Runtime: go1.x
       Tracing: Active
       Events:
-        CatchAll:
+        GetRoot:
           Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
@@ -148,7 +152,7 @@ Resources:
       Runtime: go1.x
       Tracing: Active
       Events:
-        CatchAll:
+        GetRoot:
           Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
@@ -163,20 +167,9 @@ Resources:
       Runtime: go1.x
       Tracing: Active
       Events:
-        CatchAll:
+        GetRoot:
           Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /perfil
             Method: PUT
-
-Outputs:
-  HelloWorldAPI:
-    Description: "API Gateway endpoint URL for Prod environment for First Function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
-    Description: "First Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn

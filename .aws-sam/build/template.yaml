@@ -1,44 +1,175 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: 'backend
-
-  Sample SAM Template for backend
+Description: 'Backend para ShiftEmotion basado en AWS Lambda
 
   '
 Globals:
   Function:
     Timeout: 5
 Resources:
-  HelloWorldFunction:
+  ShiftEmotionBackendAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Auth:
+        DefaultAuthorizer: jwtAuthorizer
+        Authorizers:
+          jwtAuthorizer:
+            FunctionPayloadType: TOKEN
+            FunctionArn:
+              Fn::GetAtt:
+              - JwtValidationFunction
+              - Arn
+            Identity:
+              Headers:
+              - tokenHeader
+  JwtValidationFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: HelloWorldFunction
-      Handler: hello-world
+      CodeUri: JwtValidationFunction
+      Handler: index.handler
+      Runtime: nodejs12.x
+      Tracing: Active
+  LoginFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: LoginFunction
+      Handler: main
       Runtime: go1.x
       Tracing: Active
       Events:
-        CatchAll:
+        GetRoot:
           Type: Api
           Properties:
-            Path: /hello
+            RestApiId:
+              Ref: ShiftEmotionBackendAPI
+            Path: /login
             Method: GET
-      Environment:
-        Variables:
-          PARAM1: VALUE
-Outputs:
-  HelloWorldAPI:
-    Description: API Gateway endpoint URL for Prod environment for First Function
-    Value:
-      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/
-  HelloWorldFunction:
-    Description: First Lambda Function ARN
-    Value:
-      Fn::GetAtt:
-      - HelloWorldFunction
-      - Arn
-  HelloWorldFunctionIamRole:
-    Description: Implicit IAM Role created for Hello World function
-    Value:
-      Fn::GetAtt:
-      - HelloWorldFunctionRole
-      - Arn
+            Auth:
+              Authorizer: NONE
+  RegistroFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: RegistroFunction
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        GetRoot:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ShiftEmotionBackendAPI
+            Path: /registrar
+            Method: POST
+            Auth:
+              Authorizer: NONE
+  GenerarTokenFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GenerarTokenFunction
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        GetRoot:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ShiftEmotionBackendAPI
+            Path: /reset-password
+            Method: GET
+            Auth:
+              Authorizer: NONE
+  ResetPasswordFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ResetPasswordFunction
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        GetRoot:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ShiftEmotionBackendAPI
+            Path: /reset-password
+            Method: POST
+            Auth:
+              Authorizer: NONE
+  RecomendacionInicialFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: RecomendacionInicialFunction
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        GetRoot:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ShiftEmotionBackendAPI
+            Path: /recomendaciones/home
+            Method: GET
+  HistorialFotosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: HistorialFotosFunction
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        GetRoot:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ShiftEmotionBackendAPI
+            Path: /recomendaciones/historial
+            Method: GET
+  RecomendacionFotoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: RecomendacionFotoFunction
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        GetRoot:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ShiftEmotionBackendAPI
+            Path: /recomendaciones/historial/recomendacion
+            Method: GET
+  ObtenerPerfilFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ObtenerPerfilFunction
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        GetRoot:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ShiftEmotionBackendAPI
+            Path: /perfil
+            Method: GET
+  ActualizarPerfilFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ActualizarPerfilFunction
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        GetRoot:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ShiftEmotionBackendAPI
+            Path: /perfil
+            Method: PUT

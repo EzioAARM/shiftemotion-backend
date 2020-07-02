@@ -8,3 +8,4 @@ s3_prefix = "shiftemotion-lambda-backend"
 region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
+

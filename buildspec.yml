@@ -8,9 +8,9 @@ phases:
     commands:
       - export BUCKET=codebuildshiftemotiontest
       - make
-      - aws cloudformation package --template-file template.yml --s3-bucket $BUCKET --output-template-file outputtemplate.yml --debug
+      - aws cloudformation package --template-file template.yaml --s3-bucket $BUCKET --output-template-file outputtemplate.yml --debug
 artifacts:
   type: zip
   files:
-    - template.yml
+    - template.yaml
     - outputtemplate.yml

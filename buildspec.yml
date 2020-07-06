@@ -3,7 +3,7 @@ phases:
   install:
     runtime-versions:
         nodejs: 12.x
-        go: 1.x
+        golang: 1.x
   build:
     commands:
       - npm install time

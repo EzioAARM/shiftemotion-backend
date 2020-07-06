@@ -26,7 +26,7 @@ Resources:
   JwtValidationFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: jwtValidation/
+      CodeUri: npm_services/jwtValidation/
       Handler: index.handler
       Runtime: nodejs12.x
       Tracing: Active
@@ -34,7 +34,7 @@ Resources:
   LoginFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: login/
+      CodeUri: go_services/login/
       Handler: main
       Runtime: go1.x
       Tracing: Active
@@ -51,7 +51,7 @@ Resources:
   RecomendacionInicialFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: recomendacionInicial/
+      CodeUri: go_services/recomendacionInicial/
       Handler: main
       Runtime: go1.x
       Tracing: Active
@@ -66,7 +66,7 @@ Resources:
   HistorialFotosFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: historialFotos/
+      CodeUri: go_services/historialFotos/
       Handler: main
       Runtime: go1.x
       Tracing: Active
@@ -81,7 +81,7 @@ Resources:
   RecomendacionFotoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: recomendacionFoto/
+      CodeUri: go_services/recomendacionFoto/
       Handler: main
       Runtime: go1.x
       Tracing: Active
@@ -96,7 +96,7 @@ Resources:
   ObtenerPerfilFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: obtenerPerfil/
+      CodeUri: go_services/obtenerPerfil/
       Handler: main
       Runtime: go1.x
       Tracing: Active

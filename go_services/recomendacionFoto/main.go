@@ -36,7 +36,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	item := Item{}
 	dynamodbattribute.UnmarshalMap(result.Item, &item)
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf(item.cancion),
+		Body:       fmt.Printf("%+v\n", item),
 		StatusCode: 200,
 	}, nil
 }

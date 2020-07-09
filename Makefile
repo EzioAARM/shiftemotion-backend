@@ -4,6 +4,9 @@ build:
 	go get fmt
 	go get github.com/aws/aws-lambda-go/events
 	go get github.com/aws/aws-lambda-go/lambda
+	go get github.com/aws/aws-sdk-go/aws
+	go get github.com/aws/aws-sdk-go/service/dynamodb
+	go get github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute
 	GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags '-s -w' -a -installsuffix cgo -o ./go_services/actualizarPerfil/main ./go_services/actualizarPerfil
 	GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags '-s -w' -a -installsuffix cgo -o ./go_services/historialFotos/main ./go_services/historialFotos
 	GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags '-s -w' -a -installsuffix cgo -o ./go_services/login/main ./go_services/login

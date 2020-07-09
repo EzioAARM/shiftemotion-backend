@@ -6,7 +6,6 @@ phases:
         golang: 1.x
   build:
     commands:
-      - export BUCKET=codebuildshiftemotiontest
       - make
       - aws cloudformation package --template-file template.yaml --s3-bucket $BUCKET --output-template-file outputtemplate.yml
 artifacts:

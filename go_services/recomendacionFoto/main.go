@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
@@ -36,7 +37,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	item := Item{}
 	dynamodbattribute.UnmarshalMap(result.Item, &item)
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Printf("%+v\n", item),
+		Body:       fmt.Sprintf(item.cancion),
 		StatusCode: 200,
 	}, nil
 }

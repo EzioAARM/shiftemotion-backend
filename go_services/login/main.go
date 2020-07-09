@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("Prueba desde AWS Lambda con GO cambiado"),
+		Body:       fmt.Sprintf("Prueba desde AWS Lambda"),
 		StatusCode: 200,
 	}, nil
 }

@@ -14,7 +14,7 @@ import (
 // Item Create struct to hold info about new item
 type Item struct {
 	id      int
-	name    string
+	nombre  string
 	cancion string
 }
 
@@ -23,16 +23,20 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		SharedConfigState: session.SharedConfigEnable,
 	}))
 	svc := dynamodb.New(sess)
-	result, err := svc.GetItem(&dynamodb.GetItemInput{
-		TableName: aws.String("HistorialFotosEmociones"),
+
+	input := &dynamodb.GetItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
-			"nombre": {
-				N: aws.String("roma"),
+			"id": {
+				N: aws.String("666"),
 			},
 		},
-	})
-	if err != nil {
-		fmt.Println(err.Error)
+		TableName: aws.String("HistorialFotosEmociones"),
+	}
+
+	result, err2 := svc.GetItem(input)
+	if err2 != nil {
+		fmt.Println(err2.Error)
+		fmt.Println("este es un error")
 	}
 	item := Item{}
 	dynamodbattribute.UnmarshalMap(result.Item, &item)

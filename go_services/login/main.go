@@ -12,7 +12,7 @@ import (
 const redirectURI = "http://localhost:8080/callback"
 
 var (
-	auth  = spotify.NewAuthenticator(redirectURI, spotify.ScopeUserReadPrivate)
+	auth  = spotify.NewAuthenticator(redirectURI, spotify.ScopeUserReadPrivate, spotify.ScopeUserLibraryRead)
 	ch    = make(chan *spotify.Client)
 	state = "abc123"
 )
@@ -37,6 +37,7 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 	// use the token to get an authenticated client
 	client := auth.NewClient(tok)
 	fmt.Fprintf(w, "Login Completed!")
+
 	ch <- &client
 }
 
@@ -57,7 +58,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	tracks, err := client.CurrentUsersTracks()
+	fmt.Println(tracks)
 	fmt.Println("You are logged in as:", user.ID)
-
 	lambda.Start(handler)
 }

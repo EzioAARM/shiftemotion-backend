@@ -48,6 +48,23 @@ Resources:
             Auth:
               Authorizer: NONE
 
+  LoginTokenFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: go_services/login_token
+      Handler: main
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        GetRoot:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ShiftEmotionBackendAPI
+            Path: /login/token
+            Method: POST
+            Auth:
+              Authorizer: NONE
+
   RecomendacionInicialFunction:
     Type: AWS::Serverless::Function
     Properties:

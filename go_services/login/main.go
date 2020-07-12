@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/zmb3/spotify"
 	"net/http"
+	"os"
 )
 
 const redirectURI = ""
@@ -22,8 +23,9 @@ var (
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-
-	auth.SetAuthInfo("d133bb8c721e476db214f1319fce2b11", "ecd0db16e5334a1f9d34a548c1624534")
+	id := os.Getenv("SPOTIFY_ID")
+	secret := os.Getenv("SPOTIFY_SECRET")
+	auth.SetAuthInfo(id, secret)
 	url := auth.AuthURL(state)
 	return events.APIGatewayProxyResponse{
 		Body:       "{Data:" + url + ", StatusCode:" + string(http.StatusOK) + "}",

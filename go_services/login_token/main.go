@@ -35,14 +35,11 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 			"id": {
 				N: aws.String(id),
 			},
-			"nombre": {
-				S: aws.String("jose"),
-			},
-			"email": {
-				S: aws.String("romaj1805@gmail.com"),
+			"token": {
+				S: aws.String(token),
 			},
 		},
-		TableName: aws.String("Usuarios"),
+		TableName: aws.String("PasswordsTokens"),
 	}
 
 	_, err = svc.PutItem(input)

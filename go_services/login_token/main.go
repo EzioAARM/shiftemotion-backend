@@ -19,7 +19,7 @@ type profile struct {
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	email := request.QueryStringParameters["email"]
+	//email := request.QueryStringParameters["email"]
 	//user := strings.Split(email, "@")
 	sess, err := session.NewSession()
 
@@ -44,7 +44,8 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		Item:      av,
 		TableName: aws.String("Usuarios"),
 	}
-	_, err3 = svc.PutItem(input)
+	svc.PutItem(input)
+
 	return events.APIGatewayProxyResponse{
 		Body:       fmt.Sprintf("Guardado"),
 		StatusCode: 200,

@@ -13,9 +13,9 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
-      Cors:	
-        AllowMethods: "'POST, GET, PUT'"	
-        AllowHeaders: "'*'"	
+      Cors:
+        AllowMethods: "'GET,POST,PUT,OPTIONS'"
+        AllowHeaders: "'*'"
         AllowOrigin: "'*'"
       Auth:
         DefaultAuthorizer: None
@@ -49,9 +49,6 @@ Resources:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /login
             Method: GET
-            Cors: true
-            Auth:
-              Authorizer: NONE
 
   LoginTokenFunction:
     Type: AWS::Serverless::Function
@@ -67,9 +64,6 @@ Resources:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /login/token
             Method: POST
-            Cors: true
-            Auth:
-              Authorizer: NONE
 
   RecomendacionInicialFunction:
     Type: AWS::Serverless::Function
@@ -85,7 +79,6 @@ Resources:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/home
             Method: GET
-            Cors: true
             Auth:
               Authorizer: jwtAuthorizer
 
@@ -103,7 +96,6 @@ Resources:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial
             Method: GET
-            Cors: true
             Auth:
               Authorizer: jwtAuthorizer
 
@@ -121,7 +113,6 @@ Resources:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial/recomendacion
             Method: GET
-            Cors: true
             Auth:
               Authorizer: jwtAuthorizer
 
@@ -139,6 +130,5 @@ Resources:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /perfil
             Method: GET
-            Cors: true
             Auth:
               Authorizer: jwtAuthorizer

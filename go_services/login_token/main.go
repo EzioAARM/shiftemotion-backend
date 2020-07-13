@@ -44,10 +44,10 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	_, err = svc.PutItem(input)
 	if err != nil {
-		return events.APIGatewayProxyResponse{
-			Body:       fmt.Sprintf("Error insertando elemento "+err.Error()),
+		/*return events.APIGatewayProxyResponse{
+			Body:       fmt.Sprintf("Error insertando elemento " + err.Error()),
 			StatusCode: 500,
-		}, nil
+		}, nil*/
 	}
 
 	return events.APIGatewayProxyResponse{

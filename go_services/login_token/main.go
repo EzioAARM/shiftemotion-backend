@@ -1,14 +1,15 @@
 package main
 
 import (
-	"fmt"
-
 	"encoding/json"
+	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"strconv"
+	"time"
 )
 
 type profile struct {
@@ -19,6 +20,9 @@ type profile struct {
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	body := request.Body
+	now := time.Now()
+	sec := now.Unix()
+	id := strconv.FormatInt(sec, 10)
 	var token string
 	json.Unmarshal([]byte(body), &token)
 	sess, err := session.NewSession()
@@ -29,7 +33,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	input := &dynamodb.PutItemInput{
 		Item: map[string]*dynamodb.AttributeValue{
 			"id": {
-				N: aws.String("2"),
+				N: aws.String(id),
 			},
 			"nombre": {
 				S: aws.String("jose"),

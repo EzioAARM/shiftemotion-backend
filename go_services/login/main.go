@@ -1,15 +1,20 @@
 package main
 
 import (
-	"fmt"
+	//"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/zmb3/spotify"
-	"log"
 	"net/http"
+	"os"
 )
 
-const redirectURI = "http://localhost:8080/callback"
+const redirectURI = "https://klsm6mi2h1.execute-api.us-west-2.amazonaws.com/Prod"
+
+type URL struct {
+	Data       string
+	statusCode int
+}
 
 var (
 	auth  = spotify.NewAuthenticator(redirectURI, spotify.ScopeUserReadPrivate, spotify.ScopeUserLibraryRead)
@@ -18,48 +23,16 @@ var (
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	id := os.Getenv("SPOTIFY_ID")
+	secret := os.Getenv("SPOTIFY_SECRET")
+	auth.SetAuthInfo(id, secret)
+	url := auth.AuthURL(state)
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("Prueba de cambio para la pipeline |"),
-		StatusCode: 200,
+		Body:       "{Data:" + url + ", StatusCode:" + string(http.StatusOK) + "}",
+		StatusCode: http.StatusOK,
 	}, nil
 }
 
-func completeAuth(w http.ResponseWriter, r *http.Request) {
-	tok, err := auth.Token(state, r)
-	if err != nil {
-		http.Error(w, "Couldn't get token", http.StatusForbidden)
-		log.Fatal(err)
-	}
-	if st := r.FormValue("state"); st != state {
-		http.NotFound(w, r)
-		log.Fatalf("State mismatch: %s != %s\n", st, state)
-	}
-	// use the token to get an authenticated client
-	client := auth.NewClient(tok)
-	fmt.Fprintf(w, "Login Completed!")
-
-	ch <- &client
-}
-
 func main() {
-	auth.SetAuthInfo("d133bb8c721e476db214f1319fce2b11", "ecd0db16e5334a1f9d34a548c1624534")
-	http.HandleFunc("/callback", completeAuth)
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Got request for:", r.URL.String())
-	})
-	go http.ListenAndServe(":8080", nil)
-
-	url := auth.AuthURL(state)
-	fmt.Println("Please log in to Spotify by visiting the following page in your browser:", url)
-
-	client := <-ch
-
-	user, err := client.CurrentUser()
-	if err != nil {
-		log.Fatal(err)
-	}
-	tracks, err := client.CurrentUsersTracks()
-	fmt.Println(tracks)
-	fmt.Println("You are logged in as:", user.ID)
 	lambda.Start(handler)
 }

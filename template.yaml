@@ -14,7 +14,7 @@ Resources:
     Properties:
       StageName: Prod
       Auth:
-        DefaultAuthorizer: jwtAuthorizer
+        DefaultAuthorizer: None
         Authorizers:
           jwtAuthorizer:
             FunctionPayloadType: TOKEN
@@ -82,6 +82,8 @@ Resources:
             Path: /recomendaciones/home
             Method: GET
             Cors: true
+            Auth:
+              Authorizer: jwtAuthorizer
 
   HistorialFotosFunction:
     Type: AWS::Serverless::Function
@@ -98,6 +100,8 @@ Resources:
             Path: /recomendaciones/historial
             Method: GET
             Cors: true
+            Auth:
+              Authorizer: jwtAuthorizer
 
   RecomendacionFotoFunction:
     Type: AWS::Serverless::Function
@@ -114,6 +118,8 @@ Resources:
             Path: /recomendaciones/historial/recomendacion
             Method: GET
             Cors: true
+            Auth:
+              Authorizer: jwtAuthorizer
 
   ObtenerPerfilFunction:
     Type: AWS::Serverless::Function
@@ -130,3 +136,5 @@ Resources:
             Path: /perfil
             Method: GET
             Cors: true
+            Auth:
+              Authorizer: jwtAuthorizer

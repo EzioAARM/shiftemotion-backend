@@ -19,7 +19,7 @@ type profile struct {
 }
 
 type jsonString struct {
-	token string `json:"token"`
+	Token string `json:"token"`
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -46,7 +46,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 				N: aws.String(id),
 			},
 			"token": {
-				S: aws.String(token.token),
+				S: aws.String(token.Token),
 			},
 		},
 		TableName: aws.String("PasswordsTokens"),
@@ -61,7 +61,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("este es el token: " + token.token),
+		Body:       fmt.Sprintf("este es el token: " + token.Token),
 		StatusCode: 200,
 	}, nil
 }

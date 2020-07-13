@@ -13,6 +13,10 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
+      Cors:
+        AllowMethods: "'POST, GET, PUT'"
+        AllowHeaders: "'*'"
+        AllowOrigin: "'*'"
       Auth:
         DefaultAuthorizer: jwtAuthorizer
         Authorizers:

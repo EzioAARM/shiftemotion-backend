@@ -19,7 +19,7 @@ type profile struct {
 }
 
 type jsonString struct {
-	token string
+	token string `json:"token"`
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -55,7 +55,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("este es el token: " + body),
+		Body:       fmt.Sprintf("este es el token: " + token.token),
 		StatusCode: 200,
 	}, nil
 }

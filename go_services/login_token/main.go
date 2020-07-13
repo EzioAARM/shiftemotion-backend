@@ -55,7 +55,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf(token.token),
+		Body:       fmt.Sprintf("este es el token: " + body),
 		StatusCode: 200,
 	}, nil
 }

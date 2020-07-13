@@ -3,51 +3,54 @@ package main
 import (
 	"fmt"
 
+	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-	"os"
-	//"strings"
 )
 
 type profile struct {
+	id    int
 	user  string
 	email string
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	//email := request.QueryStringParameters["email"]
-	//user := strings.Split(email, "@")
+	body := request.Body
+	var token string
+	json.Unmarshal([]byte(body), &token)
 	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("error en sesion")
+	}
+	svc := dynamodb.New(sess)
+	input := &dynamodb.PutItemInput{
+		Item: map[string]*dynamodb.AttributeValue{
+			"id": {
+				N: aws.String("2"),
+			},
+			"nombre": {
+				S: aws.String("jose"),
+			},
+			"email": {
+				S: aws.String("romaj1805@gmail.com"),
+			},
+		},
+		TableName: aws.String("Usuarios"),
+	}
 
+	_, err = svc.PutItem(input)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
+			Body:       fmt.Sprintf("Error insertando elemento"),
 			StatusCode: 500,
 		}, nil
 	}
-	svc := dynamodb.New(sess)
-
-	tempProfile := profile{
-		user:  "roma",
-		email: "romaj1805@gmail.com",
-	}
-	av, err2 := dynamodbattribute.MarshalMap(tempProfile)
-	if err2 != nil {
-		fmt.Println("Got error marshalling new movie item:")
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
-	input := &dynamodb.PutItemInput{
-		Item:      av,
-		TableName: aws.String("Usuarios"),
-	}
-	svc.PutItem(input)
 
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("Guardado"),
+		Body:       fmt.Sprintf(token),
 		StatusCode: 200,
 	}, nil
 }

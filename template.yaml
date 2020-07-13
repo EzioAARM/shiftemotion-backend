@@ -18,7 +18,8 @@ Resources:
         AllowHeaders: "'*'"
         AllowOrigin: "'*'"
       Auth:
-        DefaultAuthorizer: None
+        DefaultAuthorizer: jwtAuthorizer
+        AddDefaultAuthorizerToCorsPreflight: False
         Authorizers:
           jwtAuthorizer:
             FunctionPayloadType: TOKEN
@@ -49,6 +50,8 @@ Resources:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /login
             Method: GET
+            Auth:
+              Authorizer: NONE
 
   LoginTokenFunction:
     Type: AWS::Serverless::Function
@@ -64,6 +67,8 @@ Resources:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /login/token
             Method: POST
+            Auth:
+              Authorizer: NONE
 
   RecomendacionInicialFunction:
     Type: AWS::Serverless::Function
@@ -79,8 +84,6 @@ Resources:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/home
             Method: GET
-            Auth:
-              Authorizer: jwtAuthorizer
 
   HistorialFotosFunction:
     Type: AWS::Serverless::Function
@@ -96,8 +99,6 @@ Resources:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial
             Method: GET
-            Auth:
-              Authorizer: jwtAuthorizer
 
   RecomendacionFotoFunction:
     Type: AWS::Serverless::Function
@@ -113,8 +114,6 @@ Resources:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial/recomendacion
             Method: GET
-            Auth:
-              Authorizer: jwtAuthorizer
 
   ObtenerPerfilFunction:
     Type: AWS::Serverless::Function
@@ -130,5 +129,3 @@ Resources:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /perfil
             Method: GET
-            Auth:
-              Authorizer: jwtAuthorizer

@@ -11,6 +11,7 @@ build:
 	go get github.com/zmb3/spotify
 	go get net/http
 	go get os
+	go get strings
 	GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags '-s -w' -a -installsuffix cgo -o ./go_services/actualizarPerfil/main ./go_services/actualizarPerfil
 	GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags '-s -w' -a -installsuffix cgo -o ./go_services/historialFotos/main ./go_services/historialFotos
 	GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags '-s -w' -a -installsuffix cgo -o ./go_services/login/main ./go_services/login

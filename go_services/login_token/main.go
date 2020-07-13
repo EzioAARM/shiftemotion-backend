@@ -28,7 +28,13 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	sec := now.Unix()
 	id := strconv.FormatInt(sec, 10)
 	token := jsonString{}
-	json.Unmarshal([]byte(body), &token)
+	err := json.Unmarshal([]byte(body), &token)
+	if err != nil {
+		return events.APIGatewayProxyResponse{
+			Body:       fmt.Sprintf("Error parseando " + err.Error()),
+			StatusCode: 500,
+		}, nil
+	}
 	sess, err := session.NewSession()
 	if err != nil {
 		fmt.Println("error en sesion")

@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-const redirectURI = ""
+const redirectURI = "https://klsm6mi2h1.execute-api.us-west-2.amazonaws.com/Prod"
 
 type URL struct {
 	Data       string

@@ -34,8 +34,9 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	result, err2 := svc.GetItem(input)
 	if err2 != nil {
-		fmt.Println(err2.Error)
-		fmt.Println("este es un error")
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusNotFound,
+		}, nil
 	}
 	item := Item{}
 	dynamodbattribute.UnmarshalMap(result.Item, &item)

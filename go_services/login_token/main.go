@@ -57,10 +57,10 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	_, err = svc.PutItem(input)
 	if err != nil {
-		/*return events.APIGatewayProxyResponse{
+		return events.APIGatewayProxyResponse{
 			Body:       fmt.Sprintf("Error insertando elemento " + err.Error()),
 			StatusCode: 500,
-		}, nil*/
+		}, nil
 	}
 
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me", nil)
@@ -103,10 +103,10 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	_, err = svc.PutItem(input2)
 	if err != nil {
-		/*return events.APIGatewayProxyResponse{
+		return events.APIGatewayProxyResponse{
 			Body:       fmt.Sprintf("Error insertando elemento " + err.Error()),
 			StatusCode: 500,
-		}, nil*/
+		}, nil
 	}
 	return events.APIGatewayProxyResponse{
 		Body:       fmt.Sprintf("este es el token: " + token.Token),

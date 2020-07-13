@@ -8,14 +8,16 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"io/ioutil"
+	"net/http"
 	"strconv"
 	"time"
 )
 
 type profile struct {
-	id    int
-	user  string
-	email string
+	ID    string `json:"id"`
+	Name  string `json:"display_name"`
+	Email string `json:"email"`
 }
 
 type jsonString struct {
@@ -28,6 +30,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	sec := now.Unix()
 	id := strconv.FormatInt(sec, 10)
 	var token jsonString
+	var user profile
 	errJ := json.Unmarshal([]byte(body), &token)
 	if errJ != nil {
 		return events.APIGatewayProxyResponse{
@@ -60,6 +63,51 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		}, nil*/
 	}
 
+	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me", nil)
+	if err != nil {
+		fmt.Println("Error reading request. ", err)
+	}
+
+	req.Header.Set("Authorization", "Bearer "+token.Token)
+
+	client := &http.Client{Timeout: time.Second * 10}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Error reading response. ", err)
+	}
+	defer resp.Body.Close()
+
+	body2, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error reading body. ", err)
+	}
+	errJ2 := json.Unmarshal([]byte(body2), &user)
+	if errJ2 != nil {
+		fmt.Println("Error Parseando: ", err)
+	}
+	input2 := &dynamodb.PutItemInput{
+		Item: map[string]*dynamodb.AttributeValue{
+			"id": {
+				N: aws.String(user.ID),
+			},
+			"name": {
+				S: aws.String(user.Name),
+			},
+			"email": {
+				S: aws.String(user.Email),
+			},
+		},
+		TableName: aws.String("Usuarios"),
+	}
+
+	_, err = svc.PutItem(input2)
+	if err != nil {
+		/*return events.APIGatewayProxyResponse{
+			Body:       fmt.Sprintf("Error insertando elemento " + err.Error()),
+			StatusCode: 500,
+		}, nil*/
+	}
 	return events.APIGatewayProxyResponse{
 		Body:       fmt.Sprintf("este es el token: " + token.Token),
 		StatusCode: 200,

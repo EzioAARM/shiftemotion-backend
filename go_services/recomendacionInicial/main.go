@@ -8,9 +8,10 @@ import (
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	test := request.QueryStringParameters["email"]
 	fmt.Println(request.QueryStringParameters["email"])
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("Prueba desde AWS Lambda con GO"),
+		Body:       fmt.Sprintf(test),
 		StatusCode: 200,
 	}, nil
 }

@@ -18,12 +18,16 @@ type profile struct {
 	email string
 }
 
+type jsonString struct {
+	token string
+}
+
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	body := request.Body
 	now := time.Now()
 	sec := now.Unix()
 	id := strconv.FormatInt(sec, 10)
-	var token string
+	token := jsonString{}
 	json.Unmarshal([]byte(body), &token)
 	sess, err := session.NewSession()
 	if err != nil {
@@ -36,7 +40,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 				N: aws.String(id),
 			},
 			"token": {
-				S: aws.String(token),
+				S: aws.String(token.token),
 			},
 		},
 		TableName: aws.String("PasswordsTokens"),
@@ -51,7 +55,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf(token),
+		Body:       fmt.Sprintf(token.token),
 		StatusCode: 200,
 	}, nil
 }

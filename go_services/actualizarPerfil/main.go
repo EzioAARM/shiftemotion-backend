@@ -7,6 +7,7 @@ import (
 )
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	fmt.Println(request)
 	return events.APIGatewayProxyResponse{
 		Body:       fmt.Sprintf("Prueba desde AWS Lambda con GO"),
 		StatusCode: 200,

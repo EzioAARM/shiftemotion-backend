@@ -14,11 +14,12 @@ Resources:
     Properties:
       StageName: Prod
       Cors:
-        AllowMethods: "'POST, GET, PUT'"
+        AllowMethods: "'GET,POST,PUT,OPTIONS'"
         AllowHeaders: "'*'"
         AllowOrigin: "'*'"
       Auth:
         DefaultAuthorizer: jwtAuthorizer
+        AddDefaultAuthorizerToCorsPreflight: False
         Authorizers:
           jwtAuthorizer:
             FunctionPayloadType: TOKEN

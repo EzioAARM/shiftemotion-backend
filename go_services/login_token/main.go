@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/dgrijalva/jwt-go"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -103,7 +104,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 	user2 := profile{}
 	dynamodbattribute.UnmarshalMap(result.Item, &user2)
-	if user2.Name == "" {
+	if user2.Name != "" {
 		return events.APIGatewayProxyResponse{
 			Body:       fmt.Sprintf("El Usuario ya Existe"),
 			StatusCode: 200,
@@ -132,8 +133,20 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 			}, nil
 		}
 	}
+	secret := []byte("kalderos")
+	tokenJwt := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"name": user.Name,
+		"nbf":  time.Now().Unix(),
+	})
+	tokenString, err := tokenJwt.SignedString(secret)
+	if err != nil {
+		return events.APIGatewayProxyResponse{
+			Body:       fmt.Sprintf("error generando token: " + err.Error()),
+			StatusCode: 500,
+		}, nil
+	}
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("Datos guardados"),
+		Body:       fmt.Sprintf(tokenString),
 		StatusCode: 200,
 	}, nil
 }

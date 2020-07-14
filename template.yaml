@@ -60,15 +60,15 @@ Resources:
       Handler: main
       Runtime: go1.x
       Tracing: Active
+      Environment:
+        Variables:
+          AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
+          AWS_REGION: !Ref AwsRegion
+          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
       Events:
         GetRoot:
           Type: Api
           Properties:
-            Environment:
-              Variables:
-                AWS_ACCESS_KEY_ID: AKIA4XYGNBVQ7HRMQXJB
-                AWS_REGION: us-east-1
-                AWS_SECRET_ACCESS_KEY: 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
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /login/token
             Method: POST
@@ -95,9 +95,9 @@ Resources:
     Properties:
       Environment:
         Variables:
-          AWS_ACCESS_KEY_ID: AKIA4XYGNBVQ7HRMQXJB
-          AWS_REGION: us-east-1
-          AWS_SECRET_ACCESS_KEY: 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
+          AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
+          AWS_REGION: !Ref AwsRegion
+          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
       CodeUri: go_services/historialFotos/
       Handler: main
       Runtime: go1.x
@@ -115,9 +115,9 @@ Resources:
     Properties:
       Environment:
         Variables:
-          AWS_ACCESS_KEY_ID: AKIA4XYGNBVQ7HRMQXJB
-          AWS_REGION: us-east-1
-          AWS_SECRET_ACCESS_KEY: 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
+          AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
+          AWS_REGION: !Ref AwsRegion
+          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
       CodeUri: go_services/recomendacionFoto/
       Handler: main
       Runtime: go1.x
@@ -135,9 +135,9 @@ Resources:
     Properties:
       Environment:
         Variables:
-          AWS_ACCESS_KEY_ID: AKIA4XYGNBVQ7HRMQXJB
-          AWS_REGION: us-east-1
-          AWS_SECRET_ACCESS_KEY: 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
+          AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
+          AWS_REGION: !Ref AwsRegion
+          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
       CodeUri: go_services/obtenerPerfil/
       Handler: main
       Runtime: go1.x
@@ -149,3 +149,11 @@ Resources:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /perfil
             Method: GET
+
+Parameters:
+  AwsAccessKey:
+    Type: String
+  AwsRegion:
+    Type: String
+  AwsSecretKey:
+    Type: String

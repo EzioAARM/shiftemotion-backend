@@ -11,6 +11,11 @@ import (
 	"net/http"
 )
 
+type recomendacion struct {
+	ID    string `json:"id"`
+	Track string `json:"cancion"`
+}
+
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	id := request.QueryStringParameters["id"]
 	sess, err := session.NewSession()
@@ -34,7 +39,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 			StatusCode: http.StatusNotFound,
 		}, nil
 	}
-	item := {}
+	item := recomendacion{}
 	dynamodbattribute.UnmarshalMap(result.Item, &item)
 	return events.APIGatewayProxyResponse{
 		Body:       fmt.Sprintf("Esto es una prueb con GO"),

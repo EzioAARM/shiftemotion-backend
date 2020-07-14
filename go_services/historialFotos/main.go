@@ -20,15 +20,17 @@ type Item struct {
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	sess := session.Must(session.NewSessionWithOptions(session.Options{
-		SharedConfigState: session.SharedConfigEnable,
-	}))
+	id := request.QueryStringParameters["id"]
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("error en sesion")
+	}
 	svc := dynamodb.New(sess)
 
 	input := &dynamodb.GetItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {
-				N: aws.String("666"),
+				N: aws.String(id),
 			},
 		},
 		TableName: aws.String("HistorialFotosEmociones"),

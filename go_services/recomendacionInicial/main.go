@@ -17,6 +17,7 @@ type recomendacion struct {
 type tracks struct {
 	Name   string   `json:"name"`
 	Artist []artist `json:"artists"`
+	ID     string   `json:"id"`
 }
 
 type artist struct {
@@ -28,7 +29,10 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	var res recomendacion
 	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/recommendations?limit=10&market=ES&seed_tracks=7ytR5pFWmSjzHJIeQkgog4%2C0VjIjW4GlUZAMYd2vXMi3b%2C7ju97lgwC2rKQ6wwsf9no9%2C1rgnBhdG2JDFTbYkYRZAku", nil)
 	if err != nil {
-		fmt.Println("Error reading request. ", err)
+		return events.APIGatewayProxyResponse{
+			Body:       fmt.Sprintf("Error en la Peticion a spotify: " + err.Error()),
+			StatusCode: 500,
+		}, nil
 	}
 	req.Header.Set("Authorization", "Bearer "+token)
 

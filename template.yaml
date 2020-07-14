@@ -64,6 +64,11 @@ Resources:
         GetRoot:
           Type: Api
           Properties:
+            Environment:
+              Variables:
+                AWS_ACCESS_KEY_ID: AKIA4XYGNBVQ7HRMQXJB
+                AWS_REGION: us-east-1
+                AWS_SECRET_ACCESS_KEY: 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
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /login/token
             Method: POST
@@ -88,6 +93,11 @@ Resources:
   HistorialFotosFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Environment:
+        Variables:
+          AWS_ACCESS_KEY_ID: AKIA4XYGNBVQ7HRMQXJB
+          AWS_REGION: us-east-1
+          AWS_SECRET_ACCESS_KEY: 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
       CodeUri: go_services/historialFotos/
       Handler: main
       Runtime: go1.x
@@ -103,6 +113,11 @@ Resources:
   RecomendacionFotoFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Environment:
+        Variables:
+          AWS_ACCESS_KEY_ID: AKIA4XYGNBVQ7HRMQXJB
+          AWS_REGION: us-east-1
+          AWS_SECRET_ACCESS_KEY: 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
       CodeUri: go_services/recomendacionFoto/
       Handler: main
       Runtime: go1.x
@@ -118,6 +133,11 @@ Resources:
   ObtenerPerfilFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Environment:
+        Variables:
+          AWS_ACCESS_KEY_ID: AKIA4XYGNBVQ7HRMQXJB
+          AWS_REGION: us-east-1
+          AWS_SECRET_ACCESS_KEY: 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
       CodeUri: go_services/obtenerPerfil/
       Handler: main
       Runtime: go1.x

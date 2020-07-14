@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -86,30 +87,53 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if errJ2 != nil {
 		fmt.Println("Error Parseando: ", err)
 	}
-	input2 := &dynamodb.PutItemInput{
-		Item: map[string]*dynamodb.AttributeValue{
+	inputGet := &dynamodb.GetItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
 			"id": {
 				N: aws.String(user.ID),
-			},
-			"name": {
-				S: aws.String(user.Name),
-			},
-			"email": {
-				S: aws.String(user.Email),
 			},
 		},
 		TableName: aws.String("Usuarios"),
 	}
-
-	_, err = svc.PutItem(input2)
-	if err != nil {
+	result, err2 := svc.GetItem(inputGet)
+	if err2 != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       fmt.Sprintf("Error insertando elemento " + err.Error()),
-			StatusCode: 500,
+			StatusCode: http.StatusNotFound,
 		}, nil
 	}
+	user2 := profile{}
+	dynamodbattribute.UnmarshalMap(result.Item, &user2)
+	if user2.Name == "" {
+		return events.APIGatewayProxyResponse{
+			Body:       fmt.Sprintf("El Usuario ya Existe"),
+			StatusCode: 200,
+		}, nil
+	} else {
+		input2 := &dynamodb.PutItemInput{
+			Item: map[string]*dynamodb.AttributeValue{
+				"id": {
+					N: aws.String(user.ID),
+				},
+				"name": {
+					S: aws.String(user.Name),
+				},
+				"email": {
+					S: aws.String(user.Email),
+				},
+			},
+			TableName: aws.String("Usuarios"),
+		}
+
+		_, err = svc.PutItem(input2)
+		if err != nil {
+			return events.APIGatewayProxyResponse{
+				Body:       fmt.Sprintf("Error insertando elemento " + err.Error()),
+				StatusCode: 500,
+			}, nil
+		}
+	}
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("este es el token: " + token.Token),
+		Body:       fmt.Sprintf("Datos guardados"),
 		StatusCode: 200,
 	}, nil
 }

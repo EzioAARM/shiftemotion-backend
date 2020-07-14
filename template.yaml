@@ -10,7 +10,7 @@ Globals:
 Resources:
   #Definición de la API
   ShiftEmotionBackendAPI:
-    Type: AWS::Serverless::Api
+    Type: AWS::Serverless::RestApi
     Properties:
       StageName: Prod
       Cors:

@@ -16,6 +16,7 @@ build:
 	go get time
 	go get strconv
 	go get io/ioutil
+	go get github.com/dgrijalva/jwt-go
 	GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags '-s -w' -a -installsuffix cgo -o ./go_services/historialFotos/main ./go_services/historialFotos
 	GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags '-s -w' -a -installsuffix cgo -o ./go_services/login/main ./go_services/login
 	GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags '-s -w' -a -installsuffix cgo -o ./go_services/login_token/main ./go_services/login_token

@@ -13,7 +13,7 @@ Resources:
     Type: AWS::Serverless::HttpApi
     Properties:
       StageName: Prod
-      Cors:
+      CorsConfiguration:
         AllowMethods: "'GET,POST,PUT,OPTIONS'"
         AllowHeaders: "'*'"
         AllowOrigin: "'*'"

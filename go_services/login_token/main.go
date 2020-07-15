@@ -42,7 +42,10 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 	sess, err := session.NewSession()
 	if err != nil {
-		fmt.Println("error en sesion")
+		return events.APIGatewayProxyResponse{
+			Body:       fmt.Sprintf("Error en la sesion de dynamo: " + err.Error()),
+			StatusCode: 500,
+		}, nil
 	}
 	svc := dynamodb.New(sess)
 	input := &dynamodb.PutItemInput{

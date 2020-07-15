@@ -14,16 +14,6 @@ Resources:
     Properties:
       StageName: Prod
       CorsConfiguration: True
-      Auth:
-        DefaultAuthorizer: jwtAuthorizer
-        AddDefaultAuthorizerToCorsPreflight: False
-        Authorizers:
-          jwtAuthorizer:
-            FunctionPayloadType: TOKEN
-            FunctionArn: !GetAtt JwtValidationFunction.Arn
-            Identity:
-              Headers:
-                - tokenHeader
 
   JwtValidationFunction:
     Type: AWS::Serverless::Function

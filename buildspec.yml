@@ -4,8 +4,10 @@ phases:
     runtime-versions:
         nodejs: 12.x
         golang: 1.x
+        python: 3.8
   build:
     commands:
+      - python3 env_confs.py
       - make
       - aws cloudformation package --template-file template.yaml --s3-bucket $BUCKET --output-template-file outputtemplate.yml
 artifacts:

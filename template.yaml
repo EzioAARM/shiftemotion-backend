@@ -10,7 +10,7 @@ Globals:
 Resources:
   #Definición de la API
   ShiftEmotionBackendAPI:
-    Type: AWS::Serverless::Api
+    Type: AWS::Serverless::HttpApi
     Properties:
       StageName: Prod
       Cors:
@@ -45,9 +45,9 @@ Resources:
       Tracing: Active
       Events:
         GetRoot:
-          Type: Api
+          Type: HttpApi
           Properties:
-            RestApiId: !Ref ShiftEmotionBackendAPI
+            ApiId: !Ref ShiftEmotionBackendAPI
             Path: /login
             Method: GET
             Auth:
@@ -67,9 +67,9 @@ Resources:
           AWS_SECRET_ACCESS_KEY: !Ref AwsSecret
       Events:
         GetRoot:
-          Type: Api
+          Type: HttpApi
           Properties:
-            RestApiId: !Ref ShiftEmotionBackendAPI
+            ApiId: !Ref ShiftEmotionBackendAPI
             Path: /login/token
             Method: POST
             Auth:
@@ -84,9 +84,9 @@ Resources:
       Tracing: Active
       Events:
         GetRoot:
-          Type: Api
+          Type: HttpApi
           Properties:
-            RestApiId: !Ref ShiftEmotionBackendAPI
+            ApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/home
             Method: GET
 
@@ -104,9 +104,9 @@ Resources:
       Tracing: Active
       Events:
         GetRoot:
-          Type: Api
+          Type: HttpApi
           Properties:
-            RestApiId: !Ref ShiftEmotionBackendAPI
+            ApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial
             Method: GET
 
@@ -124,9 +124,9 @@ Resources:
       Tracing: Active
       Events:
         GetRoot:
-          Type: Api
+          Type: HttpApi
           Properties:
-            RestApiId: !Ref ShiftEmotionBackendAPI
+            ApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial/recomendacion
             Method: GET
 
@@ -144,9 +144,9 @@ Resources:
       Tracing: Active
       Events:
         GetRoot:
-          Type: Api
+          Type: HttpApi
           Properties:
-            RestApiId: !Ref ShiftEmotionBackendAPI
+            ApiId: !Ref ShiftEmotionBackendAPI
             Path: /perfil
             Method: GET
 

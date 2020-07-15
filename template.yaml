@@ -45,7 +45,7 @@ Resources:
       Tracing: Active
       Events:
         GetRoot:
-          Type: HttpApi
+          Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /login
@@ -64,10 +64,10 @@ Resources:
         Variables:
           AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
           AWS_REGION: !Ref AwsRegion
-          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
+          AWS_SECRET_ACCESS_KEY: !Ref AwsSecret
       Events:
         GetRoot:
-          Type: HttpApi
+          Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /login/token
@@ -84,7 +84,7 @@ Resources:
       Tracing: Active
       Events:
         GetRoot:
-          Type: HttpApi
+          Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/home
@@ -97,14 +97,14 @@ Resources:
         Variables:
           AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
           AWS_REGION: !Ref AwsRegion
-          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
+          AWS_SECRET_ACCESS_KEY: !Ref AwsSecret
       CodeUri: go_services/historialFotos/
       Handler: main
       Runtime: go1.x
       Tracing: Active
       Events:
         GetRoot:
-          Type: HttpApi
+          Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial
@@ -117,14 +117,14 @@ Resources:
         Variables:
           AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
           AWS_REGION: !Ref AwsRegion
-          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
+          AWS_SECRET_ACCESS_KEY: !Ref AwsSecret
       CodeUri: go_services/recomendacionFoto/
       Handler: main
       Runtime: go1.x
       Tracing: Active
       Events:
         GetRoot:
-          Type: HttpApi
+          Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial/recomendacion
@@ -137,14 +137,14 @@ Resources:
         Variables:
           AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
           AWS_REGION: !Ref AwsRegion
-          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
+          AWS_SECRET_ACCESS_KEY: !Ref AwsSecret
       CodeUri: go_services/obtenerPerfil/
       Handler: main
       Runtime: go1.x
       Tracing: Active
       Events:
         GetRoot:
-          Type: HttpApi
+          Type: Api
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /perfil
@@ -153,7 +153,10 @@ Resources:
 Parameters:
   AwsAccessKey:
     Type: String
+    Default: ${AWS_ACCESS_KEY_ID}
   AwsRegion:
     Type: String
+    Default: ${REGION}
   AwsSecretKey:
     Type: String
+    Default: ${AWS_SECRET_ACCESS_KEY}

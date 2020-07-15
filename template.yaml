@@ -153,10 +153,10 @@ Resources:
 Parameters:
   AwsAccessKey:
     Type: String
-    Default: ${AWS_ACCESS_KEY_ID}
+    Default: AWS_ACCESS_KEY_ID
   AwsRegion:
     Type: String
-    Default: ${REGION}
+    Default: REGION
   AwsSecretKey:
     Type: String
-    Default: ${AWS_SECRET_ACCESS_KEY}
+    Default: AWS_SECRET_ACCESS_KEY

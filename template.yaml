@@ -13,10 +13,7 @@ Resources:
     Type: AWS::Serverless::HttpApi
     Properties:
       StageName: Prod
-      CorsConfiguration:
-        AllowMethods: "'GET,POST,PUT,OPTIONS'"
-        AllowHeaders: "'*'"
-        AllowOrigin: "'*'"
+      CorsConfiguration: True
       Auth:
         DefaultAuthorizer: jwtAuthorizer
         AddDefaultAuthorizerToCorsPreflight: False

@@ -45,7 +45,7 @@ Resources:
       Tracing: Active
       Events:
         GetRoot:
-          Type: Api
+          Type: HttpApi
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /login
@@ -67,7 +67,7 @@ Resources:
           AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
       Events:
         GetRoot:
-          Type: Api
+          Type: HttpApi
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /login/token
@@ -84,7 +84,7 @@ Resources:
       Tracing: Active
       Events:
         GetRoot:
-          Type: Api
+          Type: HttpApi
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/home
@@ -104,7 +104,7 @@ Resources:
       Tracing: Active
       Events:
         GetRoot:
-          Type: Api
+          Type: HttpApi
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial
@@ -124,7 +124,7 @@ Resources:
       Tracing: Active
       Events:
         GetRoot:
-          Type: Api
+          Type: HttpApi
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial/recomendacion
@@ -144,7 +144,7 @@ Resources:
       Tracing: Active
       Events:
         GetRoot:
-          Type: Api
+          Type: HttpApi
           Properties:
             RestApiId: !Ref ShiftEmotionBackendAPI
             Path: /perfil

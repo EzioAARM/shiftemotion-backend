@@ -91,7 +91,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		fmt.Println("Error reading response. ", err)
 	}
 	defer resp.Body.Close()
-
+	fmt.Println("%+v", resp.Body)
 	body3, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Error reading body. ", err)

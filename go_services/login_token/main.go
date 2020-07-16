@@ -36,7 +36,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	errJ := json.Unmarshal([]byte(body), &token)
 	if errJ != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       fmt.Sprintf("Error parseando " + errJ.Error()),
+			Body:       fmt.Sprintf("Error parseando request body: " + errJ.Error()),
 			StatusCode: 500,
 		}, nil
 	}

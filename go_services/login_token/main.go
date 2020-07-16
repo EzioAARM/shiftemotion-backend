@@ -87,8 +87,8 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		fmt.Println("Error reading request. ", err)
 	}
 
+	//req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("Authorization", "Basic "+clisec)
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	client := &http.Client{Timeout: time.Second * 10}
 
@@ -102,10 +102,12 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if err != nil {
 		fmt.Println("Error reading body. ", err)
 	}
+	fmt.Println("este es el body ya parseado de spotify: %+v", body3)
 	errJ3 := json.Unmarshal([]byte(body3), &variable)
 	if errJ3 != nil {
 		fmt.Println("Error Parseando: ", err)
 	}
+	fmt.Println("este es el struct para contener el body: %+v", variable)
 	//y aqui termina
 	req2, err := http.NewRequest("GET", "https://api.spotify.com/v1/me", nil)
 	if err != nil {

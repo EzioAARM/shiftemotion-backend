@@ -108,14 +108,15 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if errJ3 != nil {
 		fmt.Println("Error Parseando: ", errJ3)
 	}
-	fmt.Println("token recibido: ", access.Access)
+	fmt.Println("token recibido:", access.Access)
 	//y aqui termina
 	req2, err := http.NewRequest("GET", "https://api.spotify.com/v1/me", nil)
 	if err != nil {
 		fmt.Println("Error reading request. ", err)
 	}
-
-	req2.Header.Set("Authorization", "Bearer"+access.Access)
+	temp := strings.TrimSpace(access.Access)
+	req2.Header.Set("Content-Type", "application/json")
+	req2.Header.Set("Authorization", "Bearer "+temp)
 
 	client2 := &http.Client{Timeout: time.Second * 10}
 

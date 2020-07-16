@@ -47,9 +47,9 @@ Resources:
       Tracing: Active
       Environment:
         Variables:
-          AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
-          AWS_REGION: !Ref AwsRegion
-          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
+          AWS_ACCESS_KEY_ID: !Ref ClaveAcceso
+          AWS_REGION: !Ref Ubicacion
+          AWS_SECRET_ACCESS_KEY: !Ref ClavePrivada
       Events:
         GetRoot:
           Type: HttpApi
@@ -78,9 +78,9 @@ Resources:
     Properties:
       Environment:
         Variables:
-          AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
-          AWS_REGION: !Ref AwsRegion
-          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
+          AWS_ACCESS_KEY_ID: !Ref ClaveAcceso
+          AWS_REGION: !Ref Ubicacion
+          AWS_SECRET_ACCESS_KEY: !Ref ClavePrivada
       CodeUri: go_services/historialFotos/
       Handler: main
       Runtime: go1.x
@@ -98,9 +98,9 @@ Resources:
     Properties:
       Environment:
         Variables:
-          AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
-          AWS_REGION: !Ref AwsRegion
-          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
+          AWS_ACCESS_KEY_ID: !Ref ClaveAcceso
+          AWS_REGION: !Ref Ubicacion
+          AWS_SECRET_ACCESS_KEY: !Ref ClavePrivada
       CodeUri: go_services/recomendacionFoto/
       Handler: main
       Runtime: go1.x
@@ -118,9 +118,9 @@ Resources:
     Properties:
       Environment:
         Variables:
-          AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
-          AWS_REGION: !Ref AwsRegion
-          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
+          AWS_ACCESS_KEY_ID: !Ref ClaveAcceso
+          AWS_REGION: !Ref Ubicacion
+          AWS_SECRET_ACCESS_KEY: !Ref ClavePrivada
       CodeUri: go_services/obtenerPerfil/
       Handler: main
       Runtime: go1.x
@@ -134,12 +134,12 @@ Resources:
             Method: GET
 
 Parameters:
-  AwsAccessKey:
+  ClaveAcceso:
     Type: String
     Default: AWS_ACCESS_KEY_ID
-  AwsRegion:
+  Ubicacion:
     Type: String
     Default: REGION
-  AwsSecretKey:
+  ClavePrivada:
     Type: String
     Default: AWS_SECRET_ACCESS_KEY

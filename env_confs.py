@@ -1,13 +1,14 @@
 import os
+import base64
 
 with open('template.yaml', 'r') as file:
     filedata = file.read()
 
-# filedata = filedata.replace('AWS_ACCESS_KEY_ID', os.environ['AWS_ACCESS_KEY_ID'])
-# filedata = filedata.replace('REGION', os.environ['AWS_DEFAULT_REGION'])
-# filedata = filedata.replace('AWS_SECRET_ACCESS_KEY', os.environ['AWS_SECRET_ACCESS_KEY'])
+spotifykeys = os.environ['SPOTIFY_CLIENT_ID'] + ":" + os.environ['SPOTIFY_SECRET']
+spotifybase64 = base64.b64encode(spotifykeys.encode('utf-8'))
+filedata = filedata.replace('SPOTIFY_BASE64_KEY', spotifybase64[2, len(spotifybase64) - 1])
 
-# with open('file.txt', 'w') as file:
-#     file.write(filedata)
+with open('file.txt', 'w') as file:
+    file.write(filedata)
 
 print(filedata)

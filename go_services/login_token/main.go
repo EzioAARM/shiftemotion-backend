@@ -36,15 +36,15 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	errJ := json.Unmarshal([]byte(body), &token)
 	if errJ != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       fmt.Sprintf("Error parseando request body: " + errJ.Error()),
-			StatusCode: http.StatusInternalServerError,
+			Body:       fmt.Sprintf(`{"Error": "parseando request body", "Status":"500"}`),
+			StatusCode: http.StatusOK,
 		}, nil
 	}
 	sess, err := session.NewSession()
 	if err != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       fmt.Sprintf("Error en la sesion de dynamo: " + err.Error()),
-			StatusCode: http.StatusInternalServerError,
+			Body:       fmt.Sprintf(`{"Error":"` + err.Error() + `", "Status":"500"}`),
+			StatusCode: http.StatusOK,
 		}, nil
 	}
 	svc := dynamodb.New(sess)
@@ -63,8 +63,8 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	_, err = svc.PutItem(input)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       fmt.Sprintf("Error insertando elemento " + err.Error()),
-			StatusCode: http.StatusInternalServerError,
+			Body:       fmt.Sprintf(`{"Error":"insertando token ` + err.Error() + `", "Status":"500"}`),
+			StatusCode: http.StatusOK,
 		}, nil
 	}
 
@@ -102,7 +102,8 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	result, err2 := svc.GetItem(inputGet)
 	if err2 != nil {
 		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusNotFound,
+			Body:       fmt.Sprintf(`{"Error":"leyendo usuario ` + err2.Error() + `", "Status":"500"}`),
+			StatusCode: http.StatusOK,
 		}, nil
 	}
 	user2 := profile{}
@@ -128,8 +129,8 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		_, err = svc.PutItem(input2)
 		if err != nil {
 			return events.APIGatewayProxyResponse{
-				Body:       fmt.Sprintf("Error insertando elemento " + err.Error()),
-				StatusCode: http.StatusInternalServerError,
+				Body:       fmt.Sprintf(`{"Error":"insertando usuario` + err.Error() + `", "Status":"500"}`),
+				StatusCode: http.StatusOK,
 			}, nil
 		}
 	}
@@ -141,8 +142,8 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	tokenString, err := tokenJwt.SignedString(secret)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
-			Body:       fmt.Sprintf("error generando token: " + err.Error()),
-			StatusCode: http.StatusInternalServerError,
+			Body:       fmt.Sprintf(`{"Error":"generando token ` + err.Error() + `", "Status":"500"}`),
+			StatusCode: http.StatusOK,
 		}, nil
 	}
 	return events.APIGatewayProxyResponse{
@@ -152,5 +153,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 }
 
 func main() {
+	variable := "este es un error"
+	fmt.Println(`{"Error":"` + variable + `","Status":"500"}`)
 	lambda.Start(handler)
 }

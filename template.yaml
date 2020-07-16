@@ -13,7 +13,20 @@ Resources:
     Type: AWS::Serverless::HttpApi
     Properties:
       StageName: Prod
-      CorsConfiguration: True
+      CorsConfiguration: 
+        AllowMethods:
+          - GET
+          - POST
+          - PUT
+          - OPTIONS
+        AllowHeaders:
+          - Authorization
+          - Content-Type
+        ExposeHeaders:
+          - Authorization
+          - Content-Type
+        AllowOrigins:
+          - "*"
 
   JwtValidationFunction:
     Type: AWS::Serverless::Function
@@ -30,6 +43,8 @@ Resources:
       Handler: main
       Runtime: go1.x
       Tracing: Active
+      Policies:
+        - AmazonDynamoDBFullAccess
       Events:
         GetRoot:
           Type: HttpApi
@@ -45,6 +60,8 @@ Resources:
       Handler: main
       Runtime: go1.x
       Tracing: Active
+      Policies:
+        - AmazonDynamoDBFullAccess
       Events:
         GetRoot:
           Type: HttpApi
@@ -60,6 +77,8 @@ Resources:
       Handler: main
       Runtime: go1.x
       Tracing: Active
+      Policies:
+        - AmazonDynamoDBFullAccess
       Events:
         GetRoot:
           Type: HttpApi
@@ -75,6 +94,9 @@ Resources:
       Handler: main
       Runtime: go1.x
       Tracing: Active
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - AmazonS3FullAccess
       Events:
         GetRoot:
           Type: HttpApi
@@ -90,6 +112,9 @@ Resources:
       Handler: main
       Runtime: go1.x
       Tracing: Active
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - AmazonS3FullAccess
       Events:
         GetRoot:
           Type: HttpApi
@@ -105,6 +130,8 @@ Resources:
       Handler: main
       Runtime: go1.x
       Tracing: Active
+      Policies:
+        - AmazonDynamoDBFullAccess
       Events:
         GetRoot:
           Type: HttpApi

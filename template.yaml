@@ -47,9 +47,9 @@ Resources:
       Tracing: Active
       Environment:
         Variables:
-          AWS_ACCESS_KEY_ID: !Ref ClaveAcceso
-          AWS_REGION: !Ref Ubicacion
-          AWS_SECRET_ACCESS_KEY: !Ref ClavePrivada
+          AwsAK: !Ref AwsAccessKey
+          AwsR: !Ref AwsRegion
+          AwsSK: !Ref AwsSecretKey
       Events:
         GetRoot:
           Type: HttpApi
@@ -78,9 +78,9 @@ Resources:
     Properties:
       Environment:
         Variables:
-          AWS_ACCESS_KEY_ID: !Ref ClaveAcceso
-          AWS_REGION: !Ref Ubicacion
-          AWS_SECRET_ACCESS_KEY: !Ref ClavePrivada
+          AwsAK: !Ref AwsAccessKey
+          AwsR: !Ref AwsRegion
+          AwsSK: !Ref AwsSecretKey
       CodeUri: go_services/historialFotos/
       Handler: main
       Runtime: go1.x
@@ -98,9 +98,9 @@ Resources:
     Properties:
       Environment:
         Variables:
-          AWS_ACCESS_KEY_ID: !Ref ClaveAcceso
-          AWS_REGION: !Ref Ubicacion
-          AWS_SECRET_ACCESS_KEY: !Ref ClavePrivada
+          AwsAK: !Ref AwsAccessKey
+          AwsR: !Ref AwsRegion
+          AwsSK: !Ref AwsSecretKey
       CodeUri: go_services/recomendacionFoto/
       Handler: main
       Runtime: go1.x
@@ -118,9 +118,9 @@ Resources:
     Properties:
       Environment:
         Variables:
-          AWS_ACCESS_KEY_ID: !Ref ClaveAcceso
-          AWS_REGION: !Ref Ubicacion
-          AWS_SECRET_ACCESS_KEY: !Ref ClavePrivada
+          AwsAK: !Ref AwsAccessKey
+          AwsR: !Ref AwsRegion
+          AwsSK: !Ref AwsSecretKey
       CodeUri: go_services/obtenerPerfil/
       Handler: main
       Runtime: go1.x
@@ -134,12 +134,12 @@ Resources:
             Method: GET
 
 Parameters:
-  ClaveAcceso:
+  AwsAccessKey:
     Type: String
     Default: AWS_ACCESS_KEY_ID
-  Ubicacion:
+  AwsRegion:
     Type: String
     Default: REGION
-  ClavePrivada:
+  AwsSecretKey:
     Type: String
     Default: AWS_SECRET_ACCESS_KEY

@@ -120,7 +120,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	client2 := &http.Client{Timeout: time.Second * 10}
 
-	resp2, err := client2.Do(req)
+	resp2, err := client2.Do(req2)
 	fmt.Println(resp2)
 	if err != nil {
 		fmt.Println("Error reading response. ", err)
@@ -197,6 +197,5 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 }
 
 func main() {
-
 	lambda.Start(handler)
 }

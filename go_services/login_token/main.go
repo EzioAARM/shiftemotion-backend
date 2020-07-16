@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
@@ -11,9 +10,11 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/google/go-querystring/query"
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -27,8 +28,13 @@ type jsonString struct {
 	Token string `json:"token"`
 }
 
+type reqInput struct {
+	Type  string `url:"grant_type"`
+	Token string `url:"refresh_token"`
+}
+
 type aToken struct {
-	AccessToken string `json:"access_token"`
+	Access string `json:"access_token"`
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -74,15 +80,11 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		}, nil
 	}
 	//aqui empieza el request para el token
-	var variable aToken
-	data, errReq := json.Marshal(map[string]string{
-		"grant_type":    "refresh_token",
-		"refresh_token": `"` + token.Token + `"`,
-	})
-	if errReq != nil {
-		fmt.Println("Error marshalling request body to spotify: " + errReq.Error())
-	}
-	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", bytes.NewBuffer(data))
+	var access aToken
+	data := reqInput{"refresh_token", token.Token}
+	opt, _ := query.Values(data)
+	//fmt.Println("este es el body de spotify: %+v", data)
+	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", strings.NewReader(opt.Encode()))
 	if err != nil {
 		fmt.Println("Error reading request. ", err)
 	}
@@ -97,24 +99,21 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		fmt.Println("Error reading response. ", err)
 	}
 	defer resp.Body.Close()
-	fmt.Println("este es el body de spotify: %+v", resp.Body)
-	body3, err := ioutil.ReadAll(resp.Body)
+	body3, err2 := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("Error reading body. ", err)
+		fmt.Println("Error reading body. ", err2)
 	}
-	fmt.Println("este es el body ya parseado de spotify: %+v", body3)
-	errJ3 := json.Unmarshal([]byte(body3), &variable)
+	errJ3 := json.Unmarshal([]byte(body3), &access)
 	if errJ3 != nil {
 		fmt.Println("Error Parseando: ", errJ3)
 	}
-	fmt.Println("este es el struct para contener el body: %+v", variable)
 	//y aqui termina
 	req2, err := http.NewRequest("GET", "https://api.spotify.com/v1/me", nil)
 	if err != nil {
 		fmt.Println("Error reading request. ", err)
 	}
 
-	req2.Header.Set("Authorization", "Bearer "+variable.AccessToken)
+	req2.Header.Set("Authorization", "Bearer "+access.Access)
 
 	client2 := &http.Client{Timeout: time.Second * 10}
 
@@ -194,5 +193,6 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 }
 
 func main() {
+
 	lambda.Start(handler)
 }

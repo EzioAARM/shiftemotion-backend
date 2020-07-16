@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
@@ -26,7 +27,12 @@ type jsonString struct {
 	Token string `json:"token"`
 }
 
+type aToken struct {
+	AccessToken string `json:"access_token"`
+}
+
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	clisec := "Zjk0MGQ2MTk4OGE2NDg0ZmJkY2M5OGE1OTZkNDc5ZWM6OGZiMzA1ZjA3NzIzNGZhMjhmNjI5YThlYjFmMTI4MmQ="
 	body := request.Body
 	now := time.Now()
 	sec := now.Unix()
@@ -67,13 +73,15 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 			StatusCode: http.StatusOK,
 		}, nil
 	}
-
-	req, err := http.NewRequest("GET", "https://api.spotify.com/v1/me", nil)
+	//aqui empieza el request para el token
+	var variable aToken
+	data := []byte(`{"grant_type":"refresh_token", "refresh_token":"` + token.Token + `"}`)
+	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", bytes.NewBuffer(data))
 	if err != nil {
 		fmt.Println("Error reading request. ", err)
 	}
 
-	req.Header.Set("Authorization", "Bearer "+token.Token)
+	req.Header.Set("Authorization: ", "Basic "+clisec)
 
 	client := &http.Client{Timeout: time.Second * 10}
 
@@ -83,7 +91,31 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 	defer resp.Body.Close()
 
-	body2, err := ioutil.ReadAll(resp.Body)
+	body3, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error reading body. ", err)
+	}
+	errJ3 := json.Unmarshal([]byte(body3), &variable)
+	if errJ3 != nil {
+		fmt.Println("Error Parseando: ", err)
+	}
+	//y aqui termina
+	req2, err := http.NewRequest("GET", "https://api.spotify.com/v1/me", nil)
+	if err != nil {
+		fmt.Println("Error reading request. ", err)
+	}
+
+	req2.Header.Set("Authorization", "Bearer "+variable.AccessToken)
+
+	client2 := &http.Client{Timeout: time.Second * 10}
+
+	resp2, err := client2.Do(req)
+	if err != nil {
+		fmt.Println("Error reading response. ", err)
+	}
+	defer resp2.Body.Close()
+
+	body2, err := ioutil.ReadAll(resp2.Body)
 	if err != nil {
 		fmt.Println("Error reading body. ", err)
 	}
@@ -147,13 +179,11 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		}, nil
 	}
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf(`{"Data"` + ":" + `"` + tokenString + `"}`),
+		Body:       fmt.Sprintf(`{"Data"` + ":" + `"` + tokenString + `", "email":"` + user.Email + `", "Status":"200"}`),
 		StatusCode: http.StatusOK,
 	}, nil
 }
 
 func main() {
-	variable := "este es un error"
-	fmt.Println(`{"Error":"` + variable + `","Status":"500"}`)
 	lambda.Start(handler)
 }

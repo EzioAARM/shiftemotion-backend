@@ -37,8 +37,6 @@ Resources:
             ApiId: !Ref ShiftEmotionBackendAPI
             Path: /login
             Method: GET
-            Auth:
-              Authorizer: NONE
 
   LoginTokenFunction:
     Type: AWS::Serverless::Function
@@ -59,8 +57,6 @@ Resources:
             ApiId: !Ref ShiftEmotionBackendAPI
             Path: /login/token
             Method: POST
-            Auth:
-              Authorizer: NONE
 
   RecomendacionInicialFunction:
     Type: AWS::Serverless::Function

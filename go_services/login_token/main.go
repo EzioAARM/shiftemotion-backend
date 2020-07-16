@@ -138,7 +138,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	inputGet := &dynamodb.GetItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {
-				N: aws.String(user.ID),
+				N: aws.String(id),
 			},
 		},
 		TableName: aws.String("Usuarios"),

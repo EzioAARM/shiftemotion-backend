@@ -45,11 +45,6 @@ Resources:
       Handler: main
       Runtime: go1.x
       Tracing: Active
-      Environment:
-        Variables:
-          AwsAK: !Ref AwsAccessKey
-          AwsR: !Ref AwsRegion
-          AwsSK: !Ref AwsSecretKey
       Events:
         GetRoot:
           Type: HttpApi
@@ -76,11 +71,6 @@ Resources:
   HistorialFotosFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Environment:
-        Variables:
-          AwsAK: !Ref AwsAccessKey
-          AwsR: !Ref AwsRegion
-          AwsSK: !Ref AwsSecretKey
       CodeUri: go_services/historialFotos/
       Handler: main
       Runtime: go1.x
@@ -96,11 +86,6 @@ Resources:
   RecomendacionFotoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Environment:
-        Variables:
-          AwsAK: !Ref AwsAccessKey
-          AwsR: !Ref AwsRegion
-          AwsSK: !Ref AwsSecretKey
       CodeUri: go_services/recomendacionFoto/
       Handler: main
       Runtime: go1.x
@@ -116,11 +101,6 @@ Resources:
   ObtenerPerfilFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Environment:
-        Variables:
-          AwsAK: !Ref AwsAccessKey
-          AwsR: !Ref AwsRegion
-          AwsSK: !Ref AwsSecretKey
       CodeUri: go_services/obtenerPerfil/
       Handler: main
       Runtime: go1.x
@@ -132,14 +112,3 @@ Resources:
             ApiId: !Ref ShiftEmotionBackendAPI
             Path: /perfil
             Method: GET
-
-Parameters:
-  AwsAccessKey:
-    Type: String
-    Default: AWS_ACCESS_KEY_ID
-  AwsRegion:
-    Type: String
-    Default: REGION
-  AwsSecretKey:
-    Type: String
-    Default: AWS_SECRET_ACCESS_KEY

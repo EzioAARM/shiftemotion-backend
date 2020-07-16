@@ -37,14 +37,14 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if errJ != nil {
 		return events.APIGatewayProxyResponse{
 			Body:       fmt.Sprintf("Error parseando request body: " + errJ.Error()),
-			StatusCode: 500,
+			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
 	sess, err := session.NewSession()
 	if err != nil {
 		return events.APIGatewayProxyResponse{
 			Body:       fmt.Sprintf("Error en la sesion de dynamo: " + err.Error()),
-			StatusCode: 500,
+			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
 	svc := dynamodb.New(sess)
@@ -64,7 +64,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if err != nil {
 		return events.APIGatewayProxyResponse{
 			Body:       fmt.Sprintf("Error insertando elemento " + err.Error()),
-			StatusCode: 500,
+			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
 
@@ -108,10 +108,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	user2 := profile{}
 	dynamodbattribute.UnmarshalMap(result.Item, &user2)
 	if user2.Name != "" {
-		return events.APIGatewayProxyResponse{
-			Body:       fmt.Sprintf("El Usuario ya Existe"),
-			StatusCode: 200,
-		}, nil
+
 	} else {
 		input2 := &dynamodb.PutItemInput{
 			Item: map[string]*dynamodb.AttributeValue{
@@ -132,7 +129,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		if err != nil {
 			return events.APIGatewayProxyResponse{
 				Body:       fmt.Sprintf("Error insertando elemento " + err.Error()),
-				StatusCode: 500,
+				StatusCode: http.StatusInternalServerError,
 			}, nil
 		}
 	}
@@ -145,12 +142,12 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if err != nil {
 		return events.APIGatewayProxyResponse{
 			Body:       fmt.Sprintf("error generando token: " + err.Error()),
-			StatusCode: 500,
+			StatusCode: http.StatusInternalServerError,
 		}, nil
 	}
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf(tokenString),
-		StatusCode: 200,
+		Body:       fmt.Sprintf(`{"Data"` + ":" + `"` + tokenString + `"}`),
+		StatusCode: http.StatusOK,
 	}, nil
 }
 

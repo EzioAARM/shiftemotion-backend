@@ -56,9 +56,6 @@ Resources:
   LoginTokenFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Environment:
-        Variables:
-          SpotifyBase64Key: !Ref SpotifyKey
       CodeUri: go_services/login_token
       Handler: main
       Runtime: go1.x
@@ -76,9 +73,6 @@ Resources:
   RecomendacionInicialFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Environment:
-        Variables:
-          SpotifyBase64Key: !Ref SpotifyKey
       CodeUri: go_services/recomendacionInicial/
       Handler: main
       Runtime: go1.x

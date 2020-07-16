@@ -115,7 +115,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		fmt.Println("Error reading request. ", err)
 	}
 
-	req2.Header.Set("Authorization", "Bearer "+access.Access)
+	req2.Header.Set("Authorization", "Bearer"+access.Access)
 
 	client2 := &http.Client{Timeout: time.Second * 10}
 

@@ -49,7 +49,7 @@ Resources:
         Variables:
           AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
           AWS_REGION: !Ref AwsRegion
-          AWS_SECRET_ACCESS_KEY: !Ref AwsSecret
+          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
       Events:
         GetRoot:
           Type: HttpApi
@@ -80,7 +80,7 @@ Resources:
         Variables:
           AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
           AWS_REGION: !Ref AwsRegion
-          AWS_SECRET_ACCESS_KEY: !Ref AwsSecret
+          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
       CodeUri: go_services/historialFotos/
       Handler: main
       Runtime: go1.x
@@ -100,7 +100,7 @@ Resources:
         Variables:
           AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
           AWS_REGION: !Ref AwsRegion
-          AWS_SECRET_ACCESS_KEY: !Ref AwsSecret
+          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
       CodeUri: go_services/recomendacionFoto/
       Handler: main
       Runtime: go1.x
@@ -120,7 +120,7 @@ Resources:
         Variables:
           AWS_ACCESS_KEY_ID: !Ref AwsAccessKey
           AWS_REGION: !Ref AwsRegion
-          AWS_SECRET_ACCESS_KEY: !Ref AwsSecret
+          AWS_SECRET_ACCESS_KEY: !Ref AwsSecretKey
       CodeUri: go_services/obtenerPerfil/
       Handler: main
       Runtime: go1.x

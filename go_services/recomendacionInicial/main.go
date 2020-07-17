@@ -101,11 +101,11 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 			StatusCode: 500,
 		}, nil
 	}
-	jsonString := `{"tracks":{"name":"` + res.Tracks[0].Name + `", "artist":"` + res.Tracks[0].Artist[0].Name + `", "id":"` + res.Tracks[0].ID + `"}`
+	jsonString := `{"tracks":[{"name":"` + res.Tracks[0].Name + `", "artist":"` + res.Tracks[0].Artist[0].Name + `", "id":"` + res.Tracks[0].ID + `"}`
 	for i := 1; i < len(res.Tracks); i++ {
 		jsonString += `,{"name":"` + res.Tracks[i].Name + `", "artist":"` + res.Tracks[i].Artist[0].Name + `", "id":"` + res.Tracks[i].ID + `"}`
 	}
-	jsonString += "}"
+	jsonString += "]}"
 	return events.APIGatewayProxyResponse{
 		Body:       fmt.Sprintf(jsonString),
 		StatusCode: 200,

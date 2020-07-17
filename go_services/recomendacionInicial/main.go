@@ -135,7 +135,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if errJ4 != nil {
 		fmt.Println(errJ4.Error())
 	}
-	seeds := prueba.Array[0].ID + "%" + prueba.Array[1].ID + "%" + prueba.Array[2].ID + "%" + prueba.Array[3].ID
+	seeds := prueba.Array[0].ID + "%2C" + prueba.Array[1].ID + "%2C" + prueba.Array[2].ID + "%2C" + prueba.Array[3].ID
 	//aqui terminan los gustos personales
 	var res recomendacion
 	req2, err := http.NewRequest("GET", "https://api.spotify.com/v1/recommendations?limit=10&market=ES&seed_tracks="+seeds, nil)

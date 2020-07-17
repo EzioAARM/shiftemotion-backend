@@ -114,7 +114,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	input := &dynamodb.PutItemInput{
 		Item: map[string]*dynamodb.AttributeValue{
 			"id": {
-				N: aws.String(user.Email),
+				S: aws.String(user.Email),
 			},
 			"token": {
 				S: aws.String(token.Token),

@@ -39,10 +39,11 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		TableName:                 aws.String(tableName),
 	}
 	result, err := svc.Scan(params)
+	resString := `{data:[`
 	for _, i := range result.Items {
 		item := Item{}
 		dynamodbattribute.UnmarshalMap(i, &item)
-
+		resString += `{"foto":"`+item.Foto+`", "emocion":"`+item.Emocion+`"},`
 	}
 
 	return events.APIGatewayProxyResponse{

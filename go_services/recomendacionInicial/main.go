@@ -44,6 +44,15 @@ type refresh struct {
 	Token string `json:"token"`
 }
 
+type test struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type arrayTest struct {
+	Array []test `json:"items"`
+}
+
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	email := request.QueryStringParameters["email"]
 
@@ -100,12 +109,40 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		fmt.Println("Error Parseando: ", errJ3)
 	}
 	//aqui termina
+	//aqui busca gustos personales
+	req4, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=10&offset=1", nil)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	req4.Header.Set("Authorization", "Bearer "+access.Access)
+	req4.Header.Set("Content-Type", "application/json")
+	req4.Header.Set("Accept", "application/json")
+
+	client4 := &http.Client{Timeout: time.Second * 10}
+
+	resp4, err := client4.Do(req4)
+	if err != nil {
+		fmt.Println(resp4)
+	}
+	//fmt.Println(resp2)
+	defer resp4.Body.Close()
+	var prueba arrayTest
+	body4, err := ioutil.ReadAll(resp4.Body)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	errJ4 := json.Unmarshal([]byte(body4), &prueba)
+	if errJ4 != nil {
+		fmt.Println(errJ4.Error())
+	}
+	seeds := prueba.Array[0].ID + "%" + prueba.Array[1].ID + "%" + prueba.Array[2].ID + "%" + prueba.Array[3].ID
+	//aqui terminan los gustos personales
 	var res recomendacion
-	req2, err := http.NewRequest("GET", "https://api.spotify.com/v1/recommendations?limit=10&market=ES&seed_tracks=7ytR5pFWmSjzHJIeQkgog4%2C0VjIjW4GlUZAMYd2vXMi3b%2C7ju97lgwC2rKQ6wwsf9no9%2C1rgnBhdG2JDFTbYkYRZAku", nil)
+	req2, err := http.NewRequest("GET", "https://api.spotify.com/v1/recommendations?limit=10&market=ES&seed_tracks="+seeds, nil)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
 			Body:       fmt.Sprintf("Error en la Peticion a spotify: " + err.Error()),
-			StatusCode: 500,
+			StatusCode: 200,
 		}, nil
 	}
 	req2.Header.Set("Authorization", "Bearer "+access.Access)
@@ -116,7 +153,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if err != nil {
 		return events.APIGatewayProxyResponse{
 			Body:       fmt.Sprintf("Error en la Peticion: " + err.Error()),
-			StatusCode: 500,
+			StatusCode: 200,
 		}, nil
 	}
 	defer resp2.Body.Close()
@@ -125,14 +162,14 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if err != nil {
 		return events.APIGatewayProxyResponse{
 			Body:       fmt.Sprintf("Error Leyendo respuesta de spotify: " + err.Error()),
-			StatusCode: 500,
+			StatusCode: 200,
 		}, nil
 	}
 	errJ2 := json.Unmarshal([]byte(body2), &res)
 	if errJ2 != nil {
 		return events.APIGatewayProxyResponse{
 			Body:       fmt.Sprintf("Error Parseando: " + errJ2.Error()),
-			StatusCode: 500,
+			StatusCode: 200,
 		}, nil
 	}
 	jsonString := `{"tracks":[{"name":"` + res.Tracks[0].Name + `", "artist":"` + res.Tracks[0].Artist[0].Name + `", "id":"` + res.Tracks[0].ID + `"}`

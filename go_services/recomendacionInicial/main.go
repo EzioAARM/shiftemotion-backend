@@ -139,7 +139,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	for i := 1; i < len(res.Tracks); i++ {
 		jsonString += `,{"name":"` + res.Tracks[i].Name + `", "artist":"` + res.Tracks[i].Artist[0].Name + `", "id":"` + res.Tracks[i].ID + `"}`
 	}
-	jsonString += "]}"
+	jsonString += `], "status":"200"}`
 	return events.APIGatewayProxyResponse{
 		Body:       fmt.Sprintf(jsonString),
 		StatusCode: 200,

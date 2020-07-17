@@ -14,9 +14,9 @@ import (
 
 // Item Create struct to hold info about new item
 type Item struct {
-	id      int
-	nombre  string
-	foto string
+	id     int
+	nombre string
+	foto   string
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -45,7 +45,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	item := Item{}
 	dynamodbattribute.UnmarshalMap(result.Item, &item)
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf(item.cancion),
+		Body:       fmt.Sprintf(item.foto),
 		StatusCode: 200,
 	}, nil
 }

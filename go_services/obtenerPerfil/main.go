@@ -18,7 +18,7 @@ type profile struct {
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	id := request.QueryStringParameters["id"]
+	email := request.QueryStringParameters["email"]
 	sess, err := session.NewSession()
 	if err != nil {
 		fmt.Println("error en sesion")
@@ -28,7 +28,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	input := &dynamodb.GetItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {
-				N: aws.String(id),
+				S: aws.String(email),
 			},
 		},
 		TableName: aws.String("Usuarios"),
@@ -42,8 +42,9 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 	item := profile{}
 	dynamodbattribute.UnmarshalMap(result.Item, &item)
+	cadena := `{"name":"` + item.Name + `", "email":"` + item.Email + `", "id":"` + item.ID + `", "status":"200"}`
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("%+v", item),
+		Body:       fmt.Sprintf(cadena),
 		StatusCode: 200,
 	}, nil
 }

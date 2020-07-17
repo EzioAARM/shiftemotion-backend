@@ -39,15 +39,17 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		TableName:                 aws.String(tableName),
 	}
 	result, err := svc.Scan(params)
-	resString := `{data:[`
-	for _, i := range result.Items {
+	itemInit := Item{}
+	dynamodbattribute.UnmarshalMap(result.Items[0], &itemInit)
+	resString := `{data:[{"foto":"` + itemInit.Foto + `", "emocion":"` + itemInit.Emocion + `"}`
+	for i := 1; i < len(result.Items); i++ {
 		item := Item{}
-		dynamodbattribute.UnmarshalMap(i, &item)
-		resString += `{"foto":"`+item.Foto+`", "emocion":"`+item.Emocion+`"},`
+		dynamodbattribute.UnmarshalMap(result.Items[i], &item)
+		resString += `, {"foto":"` + item.Foto + `", "emocion":"` + item.Emocion + `"}`
 	}
-
+	resString += `], "status":"200"}`
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf(""),
+		Body:       fmt.Sprintf(resString),
 		StatusCode: 200,
 	}, nil
 }

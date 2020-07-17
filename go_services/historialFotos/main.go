@@ -16,7 +16,7 @@ import (
 type Item struct {
 	id      int
 	nombre  string
-	cancion string
+	foto string
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

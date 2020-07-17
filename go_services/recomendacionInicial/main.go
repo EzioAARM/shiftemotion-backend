@@ -5,6 +5,10 @@ import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/google/go-querystring/query"
 	"io/ioutil"
 	"net/http"
@@ -35,12 +39,42 @@ type reqInput struct {
 	Token string `url:"refresh_token"`
 }
 
+type refresh struct {
+	ID    string `json:"id"`
+	Token string `json:"token"`
+}
+
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	token := request.QueryStringParameters["token"]
+	email := request.QueryStringParameters["email"]
+
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("error en sesion")
+	}
+	svc := dynamodb.New(sess)
+
+	input := &dynamodb.GetItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(email),
+			},
+		},
+		TableName: aws.String("PasswordsTokens"),
+	}
+
+	result, err2 := svc.GetItem(input)
+	if err2 != nil {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusNotFound,
+		}, nil
+	}
+	item := refresh{}
+	dynamodbattribute.UnmarshalMap(result.Item, &item)
+
 	clisec := "Zjk0MGQ2MTk4OGE2NDg0ZmJkY2M5OGE1OTZkNDc5ZWM6OGZiMzA1ZjA3NzIzNGZhMjhmNjI5YThlYjFmMTI4MmQ="
 	//aqui empieza la peticion para cambiar el refresh por el access
 	var access aToken
-	data := reqInput{"refresh_token", token}
+	data := reqInput{"refresh_token", item.Token}
 	opt, _ := query.Values(data)
 	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", strings.NewReader(opt.Encode()))
 	if err != nil {
@@ -101,11 +135,11 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 			StatusCode: 500,
 		}, nil
 	}
-	jsonString := `{"tracks":{"name":"` + res.Tracks[0].Name + `", "artist":"` + res.Tracks[0].Artist[0].Name + `", "id":"` + res.Tracks[0].ID + `"}`
+	jsonString := `{"tracks":[{"name":"` + res.Tracks[0].Name + `", "artist":"` + res.Tracks[0].Artist[0].Name + `", "id":"` + res.Tracks[0].ID + `"}`
 	for i := 1; i < len(res.Tracks); i++ {
 		jsonString += `,{"name":"` + res.Tracks[i].Name + `", "artist":"` + res.Tracks[i].Artist[0].Name + `", "id":"` + res.Tracks[i].ID + `"}`
 	}
-	jsonString += "}"
+	jsonString += "]}"
 	return events.APIGatewayProxyResponse{
 		Body:       fmt.Sprintf(jsonString),
 		StatusCode: 200,

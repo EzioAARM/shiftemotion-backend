@@ -110,7 +110,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 	//aqui termina
 	//aqui busca gustos personales
-	req4, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=10&offset=1", nil)
+	req4, err := http.NewRequest("GET", "https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=10&offset=0", nil)
 	if err != nil {
 		fmt.Println(err.Error())
 	}

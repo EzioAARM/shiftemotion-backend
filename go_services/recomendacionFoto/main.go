@@ -30,7 +30,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 				N: aws.String(id),
 			},
 		},
-		TableName: aws.String("Usuarios"),
+		TableName: aws.String("HistorialEscuchadas"),
 	}
 
 	result, err2 := svc.GetItem(input)

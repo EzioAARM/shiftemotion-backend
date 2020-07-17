@@ -13,7 +13,7 @@ import (
 
 // Item Create struct to hold info about new item
 type Item struct {
-	ID      int    `json:"id"`
+	ID      string `json:"id"`
 	Email   string `json:"email"`
 	Emocion string `json:"emocion"`
 	Foto    string `json:"foto"`
@@ -41,11 +41,11 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	result, err := svc.Scan(params)
 	itemInit := Item{}
 	dynamodbattribute.UnmarshalMap(result.Items[0], &itemInit)
-	resString := `{data:[{"foto":"` + itemInit.Foto + `", "emocion":"` + itemInit.Emocion + `"}`
+	resString := `{data:[{"foto":"` + itemInit.Foto + `", "emocion":"` + itemInit.Emocion + `", "id":"` + itemInit.ID + `"}`
 	for i := 1; i < len(result.Items); i++ {
 		item := Item{}
 		dynamodbattribute.UnmarshalMap(result.Items[i], &item)
-		resString += `, {"foto":"` + item.Foto + `", "emocion":"` + item.Emocion + `"}`
+		resString += `, {"foto":"` + item.Foto + `", "emocion":"` + item.Emocion + `", "id":"` + item.ID + `"}`
 	}
 	resString += `], "status":"200"}`
 	return events.APIGatewayProxyResponse{

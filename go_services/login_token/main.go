@@ -13,7 +13,6 @@ import (
 	"github.com/google/go-querystring/query"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -40,9 +39,6 @@ type aToken struct {
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	clisec := "Zjk0MGQ2MTk4OGE2NDg0ZmJkY2M5OGE1OTZkNDc5ZWM6OGZiMzA1ZjA3NzIzNGZhMjhmNjI5YThlYjFmMTI4MmQ="
 	body := request.Body
-	now := time.Now()
-	sec := now.Unix()
-	id := strconv.FormatInt(sec, 10)
 	var token jsonString
 	var user profile
 	errJ := json.Unmarshal([]byte(body), &token)
@@ -60,25 +56,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		}, nil
 	}
 	svc := dynamodb.New(sess)
-	input := &dynamodb.PutItemInput{
-		Item: map[string]*dynamodb.AttributeValue{
-			"id": {
-				N: aws.String(id),
-			},
-			"token": {
-				S: aws.String(token.Token),
-			},
-		},
-		TableName: aws.String("PasswordsTokens"),
-	}
 
-	_, err = svc.PutItem(input)
-	if err != nil {
-		return events.APIGatewayProxyResponse{
-			Body:       fmt.Sprintf(`{"Error":"insertando token ` + err.Error() + `", "Status":"500"}`),
-			StatusCode: http.StatusOK,
-		}, nil
-	}
 	//aqui empieza el request para el token
 	var access aToken
 	data := reqInput{"refresh_token", token.Token}
@@ -132,10 +110,31 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if errJ2 != nil {
 		fmt.Println("Error Parseando: ", err)
 	}
+
+	input := &dynamodb.PutItemInput{
+		Item: map[string]*dynamodb.AttributeValue{
+			"id": {
+				N: aws.String(user.Email),
+			},
+			"token": {
+				S: aws.String(token.Token),
+			},
+		},
+		TableName: aws.String("PasswordsTokens"),
+	}
+
+	_, err = svc.PutItem(input)
+	if err != nil {
+		return events.APIGatewayProxyResponse{
+			Body:       fmt.Sprintf(`{"Error":"insertando token ` + err.Error() + `", "Status":"500"}`),
+			StatusCode: http.StatusOK,
+		}, nil
+	}
+
 	inputGet := &dynamodb.GetItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {
-				N: aws.String(id),
+				S: aws.String(user.Email),
 			},
 		},
 		TableName: aws.String("Usuarios"),
@@ -155,7 +154,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		input2 := &dynamodb.PutItemInput{
 			Item: map[string]*dynamodb.AttributeValue{
 				"id": {
-					N: aws.String(id),
+					S: aws.String(user.Email),
 				},
 				"name": {
 					S: aws.String(user.Name),

@@ -14,13 +14,14 @@ import (
 
 // Item Create struct to hold info about new item
 type Item struct {
-	id     int
-	nombre string
-	foto   string
+	ID		int		`json:"id"`
+	Email	string	`json:"email"`
+	Emocion	string	`json:"emocion"`
+	Foto	string	`json:"foto"`
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	id := request.QueryStringParameters["id"]
+	id := request.QueryStringParameters["email"]
 	sess, err := session.NewSession()
 	if err != nil {
 		fmt.Println("error en sesion")
@@ -45,7 +46,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	item := Item{}
 	dynamodbattribute.UnmarshalMap(result.Item, &item)
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf(item.foto),
+		Body:       fmt.Sprintf(item.Foto),
 		StatusCode: 200,
 	}, nil
 }

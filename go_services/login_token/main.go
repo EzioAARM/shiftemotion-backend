@@ -83,7 +83,6 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	var access aToken
 	data := reqInput{"refresh_token", token.Token}
 	opt, _ := query.Values(data)
-	//fmt.Println("este es el body de spotify: %+v", data)
 	req, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", strings.NewReader(opt.Encode()))
 	if err != nil {
 		fmt.Println("Error reading request. ", err)
@@ -95,7 +94,6 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	client := &http.Client{Timeout: time.Second * 10}
 
 	resp, err := client.Do(req)
-	fmt.Println(resp)
 	if err != nil {
 		fmt.Println("Error reading response. ", err)
 	}
@@ -108,7 +106,6 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if errJ3 != nil {
 		fmt.Println("Error Parseando: ", errJ3)
 	}
-	fmt.Println("token recibido:", access.Access)
 	//y aqui termina
 	req2, err := http.NewRequest("GET", "https://api.spotify.com/v1/me", nil)
 	if err != nil {

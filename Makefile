@@ -8,6 +8,7 @@ build:
 	go get github.com/aws/aws-sdk-go/aws/session
 	go get github.com/aws/aws-sdk-go/service/dynamodb
 	go get github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute
+	go get github.com/aws/aws-sdk-go/service/dynamodb/expression
 	go get github.com/zmb3/spotify
 	go get net/http
 	go get os

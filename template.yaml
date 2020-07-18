@@ -12,14 +12,6 @@ Resources:
   ShiftEmotionBackendAPI:
     Type: AWS::Serverless::HttpApi
     Properties:
-      Auth:
-        Authorizers:
-          JwtAuthorizer:
-            IdentitySource: "$request.header.Authorization"
-            JwtConfiguration:
-              issuer: "https://dev-3xan4m44.auth0.com/"
-              audience:
-                - https://auth0-jwt-authorizer
       StageName: Prod
       CorsConfiguration: 
         AllowMethods:
@@ -35,6 +27,14 @@ Resources:
           - Content-Type
         AllowOrigins:
           - "*"
+      Auth:
+        Authorizers:
+          ShiftEmotion:
+            IdentitySource: "$request.header.Authorization"
+            JwtConfiguration:
+              issuer: "https://dev-3xan4m44.auth0.com/"
+              audience:
+                - https://auth0-jwt-authorizer
 
   JwtValidationFunction:
     Type: AWS::Serverless::Function
@@ -101,7 +101,7 @@ Resources:
             Path: /recomendaciones/home
             Method: GET
             Auth:
-              Authorizer: JwtAuthorizer
+              Authorizer: ShiftEmotion
 
   HistorialFotosFunction:
     Type: AWS::Serverless::Function
@@ -120,6 +120,8 @@ Resources:
             ApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial
             Method: GET
+            Auth:
+              Authorizer: ShiftEmotion
 
   RecomendacionFotoFunction:
     Type: AWS::Serverless::Function
@@ -139,7 +141,7 @@ Resources:
             Path: /recomendaciones/historial/recomendacion
             Method: GET
             Auth:
-              Authorizer: JwtAuthorizer
+              Authorizer: ShiftEmotion
 
   ObtenerPerfilFunction:
     Type: AWS::Serverless::Function
@@ -158,7 +160,7 @@ Resources:
             Path: /perfil
             Method: GET
             Auth:
-              Authorizer: JwtAuthorizer
+              Authorizer: ShiftEmotion
 Parameters:
   SpotifyKey:
     Type: String

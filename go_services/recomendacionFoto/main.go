@@ -12,8 +12,13 @@ import (
 )
 
 type recomendacion struct {
-	ID    string `json:"id"`
-	Track string `json:"cancion"`
+	ID     string    `json:"id"`
+	Tracks []cancion `json:"cancion"`
+}
+
+type cancion struct {
+	nombre  string `json:"nombre"`
+	artista string `json:"artista"`
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

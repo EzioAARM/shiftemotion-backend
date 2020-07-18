@@ -14,9 +14,9 @@ import (
 // Item Create struct to hold info about new item
 type Item struct {
 	ID      string `json:"id"`
-	Email   string `json:"email"`
-	Emocion string `json:"emocion"`
-	Foto    string `json:"foto"`
+	Email   string `json:"user_id"`
+	Emocion string `json:"emotion"`
+	Foto    string `json:"picture_code"`
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -27,8 +27,8 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 	svc := dynamodb.New(sess)
 
-	filt := expression.Name("email").Equal(expression.Value(email))
-	proj := expression.NamesList(expression.Name("emocion"), expression.Name("foto"))
+	filt := expression.Name("user_id").Equal(expression.Value(email))
+	proj := expression.NamesList(expression.Name("emotion"), expression.Name("picture_code"), expression.Name("user_id"), expression.Name("id"))
 	expr, err := expression.NewBuilder().WithFilter(filt).WithProjection(proj).Build()
 	tableName := "HistorialFotosEmociones"
 	params := &dynamodb.ScanInput{

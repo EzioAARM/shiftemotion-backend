@@ -120,6 +120,8 @@ Resources:
             ApiId: !Ref ShiftEmotionBackendAPI
             Path: /recomendaciones/historial
             Method: GET
+            Auth:
+              Authorizer: ShiftEmotion
 
   RecomendacionFotoFunction:
     Type: AWS::Serverless::Function

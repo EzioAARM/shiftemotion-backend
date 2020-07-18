@@ -8,49 +8,42 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-	"net/http"
+	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 )
 
 type recomendacion struct {
-	ID     string    `json:"id"`
-	Tracks []cancion `json:"cancion"`
-	Foto   string    `json:"foto"`
-}
-
-type cancion struct {
-	Name   string `json:"nombre"`
-	Artist string `json:"artista"`
+	ID      string `json:"id"`
+	Cancion string `json:"song_name"`
+	Artista string `json:"song_artist"`
+	Foto    string `json:"s3_code"`
+	User    string `json:"user"`
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	id := request.QueryStringParameters["id"]
+	foto := request.QueryStringParameters["foto"]
 	sess, err := session.NewSession()
 	if err != nil {
 		fmt.Println("error en sesion")
 	}
 	svc := dynamodb.New(sess)
-
-	input := &dynamodb.GetItemInput{
-		Key: map[string]*dynamodb.AttributeValue{
-			"id": {
-				N: aws.String(id),
-			},
-		},
-		TableName: aws.String("HistorialEscuchadas"),
+	filt := expression.Name("s3_code").Equal(expression.Value(foto))
+	proj := expression.NamesList(expression.Name("song_name"), expression.Name("s3_code"), expression.Name("user"), expression.Name("song_artist"), expression.Name("id"))
+	expr, err := expression.NewBuilder().WithFilter(filt).WithProjection(proj).Build()
+	tableName := "Recomendaciones"
+	params := &dynamodb.ScanInput{
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		FilterExpression:          expr.Filter(),
+		ProjectionExpression:      expr.Projection(),
+		TableName:                 aws.String(tableName),
 	}
-
-	result, err2 := svc.GetItem(input)
-	if err2 != nil {
-		return events.APIGatewayProxyResponse{
-			Body:       fmt.Sprintf(`{"Status":"500"}`),
-			StatusCode: http.StatusOK,
-		}, nil
-	}
+	result, err := svc.Scan(params)
 	item := recomendacion{}
-	dynamodbattribute.UnmarshalMap(result.Item, &item)
-	resString := `{"id":"` + item.ID + `", "foto":"` + item.Foto + `", "canciones":[{"nombre":"` + item.Tracks[0].Name + `", "artista":"` + item.Tracks[0].Artist + `"}`
-	for i := 1; i < len(item.Tracks); i++ {
-		resString += `, {"nombre":"` + item.Tracks[i].Name + `", "artista":"` + item.Tracks[i].Artist + `"}`
+	dynamodbattribute.UnmarshalMap(result.Items[0], &item)
+	resString := `{"foto":"` + item.Foto + `", "canciones":[{"nombre":"` + item.Cancion + `", "artista":"` + item.Artista + `"}`
+	for i := 1; i < len(result.Items); i++ {
+		dynamodbattribute.UnmarshalMap(result.Items[i], &item)
+		resString += `, {"nombre":"` + item.Cancion + `", "artista":"` + item.Artista + `"}`
 	}
 	resString += `], "status":"200"}`
 	return events.APIGatewayProxyResponse{

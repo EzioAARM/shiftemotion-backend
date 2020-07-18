@@ -38,10 +38,17 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		TableName:                 aws.String(tableName),
 	}
 	result, err := svc.Scan(params)
+	if err != nil {
+		fmt.Println("error en resultado de scan: " + err.Error())
+	}
 	item := recomendacion{}
-	dynamodbattribute.UnmarshalMap(result.Items[0], &item)
+	_, err := dynamodbattribute.UnmarshalMap(result.Items[0], &item)
+	if err != nil {
+		fmt.Println("error en parseo de resultad: " + err.Error())
+	}
 	resString := `{"foto":"` + item.Foto + `", "canciones":[{"nombre":"` + item.Cancion + `", "artista":"` + item.Artista + `"}`
 	for i := 1; i < len(result.Items); i++ {
+		item := Item{}
 		dynamodbattribute.UnmarshalMap(result.Items[i], &item)
 		resString += `, {"nombre":"` + item.Cancion + `", "artista":"` + item.Artista + `"}`
 	}

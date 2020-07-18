@@ -41,7 +41,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	result, err := svc.Scan(params)
 	itemInit := Item{}
 	dynamodbattribute.UnmarshalMap(result.Items[0], &itemInit)
-	resString := `{data:[{"foto":"` + itemInit.Foto + `", "emocion":"` + itemInit.Emocion + `", "id":"` + itemInit.ID + `"}`
+	resString := `{"data":[{"foto":"` + itemInit.Foto + `", "emocion":"` + itemInit.Emocion + `", "id":"` + itemInit.ID + `"}`
 	for i := 1; i < len(result.Items); i++ {
 		item := Item{}
 		dynamodbattribute.UnmarshalMap(result.Items[i], &item)

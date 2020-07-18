@@ -27,6 +27,14 @@ Resources:
           - Content-Type
         AllowOrigins:
           - "*"
+      Auth:
+        Authorizers:
+          ShiftEmotion:
+            IdentitySource: "$request.header.Authorization"
+            JwtConfiguration:
+              issuer: "https://dev-3xan4m44.auth0.com/"
+              audience:
+                - https://auth0-jwt-authorizer
 
   JwtValidationFunction:
     Type: AWS::Serverless::Function

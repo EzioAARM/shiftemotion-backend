@@ -27,7 +27,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	}
 	svc := dynamodb.New(sess)
 
-	filt := expression.Name("email").Equal(expression.Value(email))
+	filt := expression.Name("user_id").Equal(expression.Value(email))
 	proj := expression.NamesList(expression.Name("emotion"), expression.Name("picture_code"), expression.Name("user_id"), expression.Name("id"))
 	expr, err := expression.NewBuilder().WithFilter(filt).WithProjection(proj).Build()
 	tableName := "HistorialFotosEmociones"

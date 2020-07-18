@@ -42,13 +42,13 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		fmt.Println("error en resultado de scan: " + err.Error())
 	}
 	item := recomendacion{}
-	_, err := dynamodbattribute.UnmarshalMap(result.Items[0], &item)
+	dynamodbattribute.UnmarshalMap(result.Items[0], &item)
 	if err != nil {
 		fmt.Println("error en parseo de resultad: " + err.Error())
 	}
 	resString := `{"foto":"` + item.Foto + `", "canciones":[{"nombre":"` + item.Cancion + `", "artista":"` + item.Artista + `"}`
 	for i := 1; i < len(result.Items); i++ {
-		item := Item{}
+		item := recomendacion{}
 		dynamodbattribute.UnmarshalMap(result.Items[i], &item)
 		resString += `, {"nombre":"` + item.Cancion + `", "artista":"` + item.Artista + `"}`
 	}

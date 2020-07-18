@@ -12,6 +12,15 @@ Resources:
   ShiftEmotionBackendAPI:
     Type: AWS::Serverless::HttpApi
     Properties:
+      Auth:
+        DefaultAuthorizer: JwtAuthorizer
+        Authorizers:
+          JwtAuthorizer:
+            IdentitySource: "$request.header.Authorization"
+            JwtConfiguration:
+              issuer: "https://dev-3xan4m44.auth0.com/"
+              audience:
+                - https://auth0-jwt-authorizer
       StageName: Prod
       CorsConfiguration: 
         AllowMethods:
@@ -52,6 +61,8 @@ Resources:
             ApiId: !Ref ShiftEmotionBackendAPI
             Path: /login
             Method: GET
+            Auth:
+              Authorizer: NONE
 
   LoginTokenFunction:
     Type: AWS::Serverless::Function
@@ -72,6 +83,8 @@ Resources:
             ApiId: !Ref ShiftEmotionBackendAPI
             Path: /login/token
             Method: POST
+            Auth:
+              Authorizer: NONE
 
   RecomendacionInicialFunction:
     Type: AWS::Serverless::Function

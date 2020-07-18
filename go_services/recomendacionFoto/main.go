@@ -14,11 +14,12 @@ import (
 type recomendacion struct {
 	ID     string    `json:"id"`
 	Tracks []cancion `json:"cancion"`
+	Foto   string    `json:"foto"`
 }
 
 type cancion struct {
-	nombre  string `json:"nombre"`
-	artista string `json:"artista"`
+	Name   string `json:"nombre"`
+	Artist string `json:"artista"`
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -41,13 +42,19 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	result, err2 := svc.GetItem(input)
 	if err2 != nil {
 		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusNotFound,
+			Body:       fmt.Sprintf(`{"Status":"500"}`),
+			StatusCode: http.StatusOK,
 		}, nil
 	}
 	item := recomendacion{}
 	dynamodbattribute.UnmarshalMap(result.Item, &item)
+	resString := `{"id":"` + item.ID + `", "foto":"` + item.Foto + `", "canciones":[{"nombre":"` + item.Tracks[0].Name + `", "artista":"` + item.Tracks[0].Artist + `"}`
+	for i := 1; i < len(item.Tracks); i++ {
+		resString += `, {"nombre":"` + item.Tracks[i].Name + `", "artista":"` + item.Tracks[i].Artist + `"}`
+	}
+	resString += `], "status":"200"}`
 	return events.APIGatewayProxyResponse{
-		Body:       fmt.Sprintf("Esto es una prueb con GO"),
+		Body:       fmt.Sprintf(resString),
 		StatusCode: 200,
 	}, nil
 }
